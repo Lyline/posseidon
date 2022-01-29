@@ -1,6 +1,11 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.controllers.dto.BidListDTO;
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.service.BidListServiceImpl;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,16 +15,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class BidListController {
-    // TODO: Inject Bid service
+   private final BidListServiceImpl service;
+
+    private ModelMapper mapper=new ModelMapper();
+    private Logger logger= LoggerFactory.getLogger(BidListController.class);
+
+    public BidListController(BidListServiceImpl service) {
+        this.service = service;
+    }
 
     @RequestMapping("/bidList/list")
-    public String home(Model model)
-    {
-        // TODO: call service find all bids to show to the view
+    public String home(Model model){
+        List<BidListDTO>bidsDTO=new ArrayList<>();
+        List<BidList>bids=service.getAll();
+
+        for (BidList bid:bids) {
+            BidListDTO bidDTO=mapper.map(bid,BidListDTO.class);
+            bidsDTO.add(bidDTO);
+        }
+
+        model.addAttribute("bids",bidsDTO);
+        logger.info("Get - all bid list : "+bids.size()+" bid(s)");
         return "bidList/list";
     }
 
@@ -43,7 +64,7 @@ public class BidListController {
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
                              BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Bid and return list Bid
+        // TODO: check required fields, if valid call com.nnk.springboot.service to update Bid and return list Bid
         return "redirect:/bidList/list";
     }
 

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	  xmlns:th="http://www.thymeleaf.org">
+<html lang="en-us"
+		xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="https://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
 <title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+<link rel="stylesheet" href="/css/bootstrap.min.css" >
 </head>
 <body>
 <div class="container">
@@ -38,6 +39,18 @@
 			</thead>
 			<tbody>
 				<!-- TODO: Show all Bids to the table, the Action column will have Edit & Delete buttons -->
+				<td th:if="${#lists.isEmpty(bids)}">
+					<tr>
+						<td colspan="5" class="alert alert-danger text-center">Not bid list saved</td>
+					</tr>
+				</td>
+				<tr th:each="bid: ${bids}">
+					<td th:text="${bid.bidListId}"></td>
+					<td th:text="${bid.account}"></td>
+					<td th:text="${bid.type}"></td>
+					<td th:text="${bid.bidQuantity}"></td>
+					<td>Edit - Delete</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
