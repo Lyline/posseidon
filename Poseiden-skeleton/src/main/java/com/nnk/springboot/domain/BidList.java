@@ -1,15 +1,89 @@
 package com.nnk.springboot.domain;
 
-import org.springframework.beans.factory.annotation.Required;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "bidlist")
 public class BidList {
-    // TODO: Map columns in data table BIDLIST with corresponding java fields
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(columnDefinition = "TINYINT(4)")
+  private Integer bidListId;
+
+  @Column(columnDefinition = "VARCHAR(30)")
+  private String account;
+
+  @Column(columnDefinition = "VARCHAR(30)")
+  private String type;
+
+  @Column(columnDefinition = "DOUBLE")
+  private double bidQuantity;
+
+  @Column(columnDefinition = "DOUBLE")
+  private double askQuantity;
+
+  @Column(columnDefinition = "DOUBLE")
+  private double bid;
+
+  @Column(columnDefinition = "DOUBLE")
+  private double ask;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String benchmark;
+
+  @Column(columnDefinition = "TIMESTAMP")
+  private LocalDateTime bidListDate;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String commentary;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String security;
+
+  @Column(columnDefinition = "VARCHAR(10)")
+  private String status;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String trader;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String book;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String creationName;
+
+  @Column(columnDefinition = "TIMESTAMP")
+  private LocalDateTime creationDate;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String revisionName;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private LocalDateTime revisionDate;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String dealName;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String dealType;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String sourceListId;
+
+  @Column(columnDefinition = "VARCHAR(125)")
+  private String side;
+
+  public BidList(String account, String type, double bidQuantity) {
+    this.account = account;
+    this.type = type;
+    this.bidQuantity = bidQuantity;
+  }
 }

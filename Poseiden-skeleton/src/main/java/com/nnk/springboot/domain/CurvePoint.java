@@ -1,15 +1,41 @@
 package com.nnk.springboot.domain;
 
-import org.hibernate.validator.constraints.Length;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "curvepoint")
 public class CurvePoint {
-    // TODO: Map columns in data table CURVEPOINT with corresponding java fields
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(columnDefinition = "TINYINT(4)")
+  private Integer id;
+
+  @Column(columnDefinition = "TINYINT")
+  private Integer curveId;
+
+  @Column(columnDefinition = "TIMESTAMP")
+  private LocalDateTime asOfDate;
+
+  @Column(columnDefinition = "DOUBLE")
+  private double term;
+
+  @Column(columnDefinition = "DOUBLE")
+  private double value;
+
+  @Column(columnDefinition = "TIMESTAMP")
+  private LocalDateTime creationDate;
+
+  public CurvePoint(Integer curveId, double term, double value) {
+    this.curveId = curveId;
+    this.term = term;
+    this.value = value;
+  }
 }
