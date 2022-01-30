@@ -64,6 +64,21 @@ class BidListControllerTest {
   }
 
   @Test
+  void givenUserWantCreateANewBidListWhenGetAddThenDisplayedAddBidListForm() throws Exception {
+    //Given
+    //When
+    mockMvc.perform(get("/bidList/add"))
+        .andExpect(view().name("bidList/add"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("Account")))
+        .andExpect(content().string(containsString("Type")))
+        .andExpect(content().string(containsString("Bid quantity")))
+        .andExpect(content().string(containsString("Add BidList")))
+        .andExpect(content().string(containsString("Cancel")));
+  }
+
+  @Test
   void addBidForm() {
     //Given
     //When

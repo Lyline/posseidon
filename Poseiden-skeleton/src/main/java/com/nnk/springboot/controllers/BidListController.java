@@ -46,7 +46,7 @@ public class BidListController {
 
     @GetMapping("/bidList/add")
     public String addBidForm(BidList bid) {
-        return "bidList/add";
+      return "bidList/add";
     }
 
     @PostMapping("/bidList/validate")
