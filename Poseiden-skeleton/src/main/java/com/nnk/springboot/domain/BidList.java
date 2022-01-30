@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter
@@ -18,12 +20,15 @@ public class BidList {
   @Column(columnDefinition = "TINYINT(4)")
   private Integer bidListId;
 
+  @NotBlank(message = "Account is mandatory")
   @Column(columnDefinition = "VARCHAR(30)")
   private String account;
 
+  @NotBlank(message="Type is mandatory")
   @Column(columnDefinition = "VARCHAR(30)")
   private String type;
 
+  @DecimalMin(value = "0.1", message="Enter only numbers")
   @Column(columnDefinition = "DOUBLE")
   private double bidQuantity;
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class BidListController {
     }
 
     @RequestMapping("/bidList/list")
-    public String home(Model model){
+    public String home(Model model, HttpServletResponse response){
         List<BidListDTO>bidsDTO=new ArrayList<>();
         List<BidList>bids=service.getAll();
 
@@ -39,20 +40,44 @@ public class BidListController {
             bidsDTO.add(bidDTO);
         }
 
+        if(bids.isEmpty()){
+          response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        }else response.setStatus(HttpServletResponse.SC_OK);
+
         model.addAttribute("bids",bidsDTO);
         logger.info("Get - all bid list : "+bids.size()+" bid(s)");
         return "bidList/list";
     }
 
     @GetMapping("/bidList/add")
-    public String addBidForm(BidList bid) {
+    public String addBidForm(BidList bid,Model model) {
+      model.addAttribute("bidList",bid);
       return "bidList/add";
     }
 
     @PostMapping("/bidList/validate")
-    public String validate(@Valid BidList bid, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return bid list
+    public String validate(@Valid BidList bid, BindingResult result,
+                           HttpServletResponse response, Model model) {
+
+      if (result.hasErrors()){
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return "bidList/add";
+      }
+
+      List<BidListDTO>bidsDTO= new ArrayList<>();
+
+      service.create(bid);
+      response.setStatus(HttpServletResponse.SC_CREATED);
+
+      List<BidList>bids=service.getAll();
+
+      for (BidList bidToDTO:bids) {
+        BidListDTO bidMapDTO=mapper.map(bidToDTO,BidListDTO.class);
+        bidsDTO.add(bidMapDTO);
+      }
+
+      model.addAttribute("bids",bidsDTO);
+      return "bidList/list";
     }
 
     @GetMapping("/bidList/update/{id}")

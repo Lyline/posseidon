@@ -9,4 +9,5 @@ import java.util.List;
 public interface BidListService {
 
   List<BidList> getAll();
+  BidList create(BidList bidToSave);
 }

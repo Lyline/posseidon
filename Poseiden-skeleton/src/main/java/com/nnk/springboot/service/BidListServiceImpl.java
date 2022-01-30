@@ -3,6 +3,7 @@ package com.nnk.springboot.service;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,7 +15,14 @@ public class BidListServiceImpl implements BidListService {
   }
 
   @Override
+  @Transactional
   public List<BidList> getAll() {
     return repository.findAll();
+  }
+
+  @Override
+  @Transactional
+  public BidList create(BidList bidToSave) {
+    return repository.save(bidToSave);
   }
 }

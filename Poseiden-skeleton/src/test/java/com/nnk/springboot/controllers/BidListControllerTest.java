@@ -11,8 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BidListController.class)
@@ -51,16 +53,14 @@ class BidListControllerTest {
   }
 
   @Test
-  void givenNoBidListSavedWhenGetHomeThenDisplayedBidListTableWithErrorMessage() throws Exception {
+  void givenNoBidListSavedWhenGetHomeThenDisplayedBidListTableEmpty() throws Exception {
     //Given
     when(service.getAll()).thenReturn(List.of());
 
     //When
     mockMvc.perform(get("/bidList/list"))
         .andExpect(view().name("bidList/list"))
-        .andExpect(status().isOk())
-
-        .andExpect(content().string(containsString("Not bid list saved")));
+        .andExpect(status().isNoContent());
   }
 
   @Test
@@ -79,17 +79,43 @@ class BidListControllerTest {
   }
 
   @Test
-  void addBidForm() {
+  void givenANewBidListValidWhenValidateThenBidListIsSavedAndBidListHomeDisplayed() throws Exception {
     //Given
+    BidList bidSaved= new BidList("Account Test", "Type Test", 10d);
+    bidSaved.setBidListId(1);
+
+    when(service.create(any())).thenReturn(bidSaved);
+    when(service.getAll()).thenReturn(List.of(bidSaved));
+
     //When
+    mockMvc.perform(post("/bidList/validate")
+            .param("account","Account Test")
+            .param("type","Type Test")
+            .param("bidQuantity","10"))
+        .andExpect(view().name("bidList/list"))
+        .andExpect(status().isCreated())
+
+        .andExpect(content().string(containsString("1")))
+        .andExpect(content().string(containsString("Account Test")))
+        .andExpect(content().string(containsString("Type Test")))
+        .andExpect(content().string(containsString("10")));
     //Then
   }
 
   @Test
-  void validate() {
+  void givenANewBidListNotValidWhenValidateThenBidListIsNotSavedAndDisplayedErrorMessage() throws Exception {
     //Given
     //When
-    //Then
+    mockMvc.perform(post("/bidList/validate")
+            .param("account","")
+            .param("type","")
+            .param("bidQuantity", String.valueOf(0)))
+        .andExpect(view().name("bidList/add"))
+        .andExpect(status().isBadRequest())
+
+        .andExpect(content().string(containsString("Account is mandatory")))
+        .andExpect(content().string(containsString("Type is mandatory")))
+        .andExpect(content().string(containsString("Enter only numbers")));
   }
 
   @Test
