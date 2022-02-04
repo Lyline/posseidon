@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class BidListController {
@@ -44,9 +45,9 @@ public class BidListController {
           response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }else response.setStatus(HttpServletResponse.SC_OK);
 
-        model.addAttribute("bids",bidsDTO);
-        logger.info("Get - all bid list : "+bids.size()+" bid(s)");
-        return "bidList/list";
+      logger.info("Get - all bid list : "+bids.size()+" bid(s)");
+      model.addAttribute("bids",bidsDTO);
+      return "bidList/list";
     }
 
     @GetMapping("/bidList/add")
@@ -60,7 +61,6 @@ public class BidListController {
                            HttpServletResponse response, Model model) {
 
       if (result.hasErrors()){
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return "bidList/add";
       }
 
@@ -75,22 +75,42 @@ public class BidListController {
         BidListDTO bidMapDTO=mapper.map(bidToDTO,BidListDTO.class);
         bidsDTO.add(bidMapDTO);
       }
-
+      logger.info("Post - bid list : Account ="+bid.getAccount()+", Type ="
+          +bid.getType()+", Bid quantity ="+bid.getBidQuantity()+" is saved");
       model.addAttribute("bids",bidsDTO);
       return "bidList/list";
     }
 
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Bid by Id and to model then show to the form
+      Optional<BidList> bidList=service.getBidListById(id);
+
+      model.addAttribute("bidList", bidList.get());
         return "bidList/update";
     }
 
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call com.nnk.springboot.service to update Bid and return list Bid
-        return "redirect:/bidList/list";
+                             BindingResult result, Model model, HttpServletResponse response) {
+      if (result.hasErrors()){
+        return "/bidList/update";
+      }else response.setStatus(HttpServletResponse.SC_CREATED);
+
+      BidList bidListToUpdate= new BidList();
+      bidListToUpdate.setBidListId(id);
+      bidListToUpdate.setAccount(bidList.getAccount());
+      bidListToUpdate.setType(bidList.getType());
+      bidListToUpdate.setBidQuantity(bidList.getBidQuantity());
+
+      BidList bidListUpdated=service.update(bidListToUpdate);
+
+      logger.info("Update - Bid list id ="+id+", Account ="+bidListToUpdate.getAccount()
+          +", Type ="+bidListToUpdate.getType()+", Bid quantity ="
+          +bidListToUpdate.getBidQuantity()+" is updated");
+
+      model.addAttribute("bidList",bidListUpdated);
+      model.addAttribute("bids",service.getAll());
+      return "/bidList/list";
     }
 
     @GetMapping("/bidList/delete/{id}")
