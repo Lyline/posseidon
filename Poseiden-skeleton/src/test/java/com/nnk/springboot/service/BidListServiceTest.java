@@ -65,4 +65,14 @@ public class BidListServiceTest {
     assertSame(actual,bid);
     verify(repository, times(1)).save(bidToUpdate);
   }
+
+  @Test
+  void givenABidListWhenDeleteThenTheBidListIsDeleted() {
+    //Given
+    //When
+    classUnderTest.delete(1);
+
+    //Then
+    verify(repository,times(1)).deleteById(1);
+  }
 }

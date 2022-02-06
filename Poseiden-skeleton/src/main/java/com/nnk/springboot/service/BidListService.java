@@ -13,4 +13,5 @@ public interface BidListService {
   BidList create(BidList bidToSave);
   Optional<BidList> getBidListById(Integer id);
   BidList update(BidList bidToUpdate);
+  void delete(Integer id);
 }

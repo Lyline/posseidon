@@ -39,5 +39,9 @@ public class BidListServiceImpl implements BidListService {
     return repository.save(bidToUpdate);
   }
 
-
+  @Override
+  @Transactional
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }

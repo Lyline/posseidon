@@ -204,9 +204,10 @@ class BidListControllerTest {
   }
 
   @Test
-  void deleteBid() {
-    //Given
+  void givenABidListWhenDeleteBidThenBidListIsDeletedAndBidHomeDisplayed() throws Exception {
     //When
-    //Then
+    mockMvc.perform(get("/bidList/delete/1"))
+        .andExpect(view().name("/bidList/list"))
+        .andExpect(status().isOk());
   }
 }
