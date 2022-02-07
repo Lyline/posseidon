@@ -24,8 +24,8 @@ import java.util.Optional;
 public class BidListController {
    private final BidListServiceImpl service;
 
-    private ModelMapper mapper=new ModelMapper();
-    private Logger logger= LoggerFactory.getLogger(BidListController.class);
+    private final ModelMapper mapper=new ModelMapper();
+    private final Logger logger= LoggerFactory.getLogger(BidListController.class);
 
     public BidListController(BidListServiceImpl service) {
         this.service = service;
@@ -40,10 +40,6 @@ public class BidListController {
             BidListDTO bidDTO=mapper.map(bid,BidListDTO.class);
             bidsDTO.add(bidDTO);
         }
-
-        if(bids.isEmpty()){
-          response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-        }else response.setStatus(HttpServletResponse.SC_OK);
 
       logger.info("Get - all bid list : "+bids.size()+" bid(s)");
       model.addAttribute("bids",bidsDTO);

@@ -62,7 +62,7 @@ class BidListControllerTest {
     //When
     mockMvc.perform(get("/bidList/list"))
         .andExpect(view().name("bidList/list"))
-        .andExpect(status().isNoContent());
+        .andExpect(status().isOk());
   }
 
   @Test
