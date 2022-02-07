@@ -8,4 +8,5 @@ import java.util.List;
 @Service
 public interface CurvePointService {
   List<CurvePoint>getAll();
+  CurvePoint create(CurvePoint curvePoint);
 }

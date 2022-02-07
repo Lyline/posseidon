@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +19,8 @@ class CurvePointServiceTest {
 
   private final CurvePoint curve= new CurvePoint();
   private final CurvePoint curve1= new CurvePoint();
+
+  private final CurvePoint curveToSave= new CurvePoint();
 
   @BeforeEach
   void setUp() {
@@ -29,10 +33,14 @@ class CurvePointServiceTest {
     curve1.setCurveId(20);
     curve1.setTerm(14);
     curve1.setValue(4);
+
+    curveToSave.setCurveId(10);
+    curveToSave.setTerm(12);
+    curveToSave.setValue(3);
   }
 
   @Test
-  void givenTwoCurvePoint() {
+  void givenTwoCurvePointWhenGetAllThenReturnTwoResults() {
     //Given
     when(repository.findAll()).thenReturn(List.of(curve,curve1));
 
@@ -41,5 +49,17 @@ class CurvePointServiceTest {
 
     //Then
     assertThat(actual.size()).isEqualTo(2);
+  }
+
+  @Test
+  void givenACurvePointValidWhenCreateThenCurvePointIsSaved() {
+    //Given
+    when(repository.save(any())).thenReturn(curve);
+
+    //When
+    CurvePoint actual= classUnderTest.create(curveToSave);
+
+    //Then
+    assertSame(actual,curve);
   }
 }

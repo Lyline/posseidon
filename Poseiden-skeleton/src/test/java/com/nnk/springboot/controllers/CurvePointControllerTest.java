@@ -80,12 +80,38 @@ class CurvePointControllerTest {
   }
 
   @Test
-  void validate() {
+  void givenANewCurvePointValidWhenCreateThenCurveIsSavedAndCurveHomeDisplayed() throws Exception {
     //Given
+    when(service.create(any())).thenReturn(curve);
+    when(service.getAll()).thenReturn(List.of(curve));
+
     //When
-    //Then
+    mockMvc.perform(post("/curvePoint/validate")
+        .param("curveId","10")
+        .param("term","12")
+        .param("value","3"))
+        .andExpect(view().name("curvePoint/list"))
+        .andExpect(status().isCreated())
+
+        .andExpect(content().string(containsString("1")))
+        .andExpect(content().string(containsString("10")))
+        .andExpect(content().string(containsString("12")))
+        .andExpect(content().string(containsString("3")));
   }
 
+  @Test
+  void givenANewCurvePointNotValidWhenCreateThenCurveFormDisplayedWithErrorMessage() throws Exception {
+    //Given
+
+    //When
+    mockMvc.perform(post("/curvePoint/validate"))
+        .andExpect(view().name("curvePoint/add"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("Curve Id must not be null")))
+        .andExpect(content().string(containsString("Term must not be null")))
+        .andExpect(content().string(containsString("Value must not be null")));
+  }
   @Test
   void showUpdateForm() {
     //Given

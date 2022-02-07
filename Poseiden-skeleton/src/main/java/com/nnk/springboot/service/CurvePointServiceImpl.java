@@ -3,6 +3,7 @@ package com.nnk.springboot.service;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,5 +18,11 @@ public class CurvePointServiceImpl implements CurvePointService {
   @Override
   public List<CurvePoint> getAll() {
     return repository.findAll();
+  }
+
+  @Override
+  @Transactional
+  public CurvePoint create(CurvePoint curvePoint) {
+    return repository.save(curvePoint);
   }
 }

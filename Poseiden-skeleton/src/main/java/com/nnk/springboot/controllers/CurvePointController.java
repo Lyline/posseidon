@@ -52,9 +52,22 @@ public class CurvePointController {
     }
 
     @PostMapping("/curvePoint/validate")
-    public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Curve list
-        return "curvePoint/add";
+    public String validate(@Valid CurvePoint curvePoint, BindingResult result,
+                           Model model, HttpServletResponse response) {
+        if (result.hasErrors()){
+            return "curvePoint/add";
+        }
+
+        service.create(curvePoint);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+
+        List<CurvePoint>curves= service.getAll();
+        List<CurvePointDTO>curvesDTO=curves.stream()
+            .map(curve->mapper.map(curve,CurvePointDTO.class))
+            .collect(Collectors.toList());
+
+        model.addAttribute("curves",curvesDTO);
+        return "curvePoint/list";
     }
 
     @GetMapping("/curvePoint/update/{id}")
