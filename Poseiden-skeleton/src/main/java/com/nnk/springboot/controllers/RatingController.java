@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.service.RatingServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,12 +14,17 @@ import javax.validation.Valid;
 
 @Controller
 public class RatingController {
-    // TODO: Inject Rating service
+
+    private final RatingServiceImpl service;
+
+    public RatingController(RatingServiceImpl service) {
+        this.service = service;
+    }
 
     @RequestMapping("/rating/list")
     public String home(Model model)
     {
-        // TODO: find all Rating, add to model
+        model.addAttribute("ratings",service.getAll());
         return "rating/list";
     }
 
