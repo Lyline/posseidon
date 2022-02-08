@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -111,6 +112,68 @@ public class RatingControllerTest {
     //When
     mockMvc.perform(post("/rating/validate"))
         .andExpect(view().name("rating/add"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("Moody&#39;s rating must not be empty")))
+        .andExpect(content().string(containsString("Sand rating must not be empty")))
+        .andExpect(content().string(containsString("Fitch rating must not be empty")))
+        .andExpect(content().string(containsString("Order number must not be null")));
+  }
+
+  @Test
+  void showUpdateForm() throws Exception {
+    //Given
+    when(service.getById(anyInt())).thenReturn(rating);
+
+    //When
+    mockMvc.perform(get("/rating/update/1")
+            .param("moodysRating","mood_test")
+            .param("sandPRating","sand_test")
+            .param("fitchRating","fitch_test")
+            .param("orderNumber",String.valueOf(3)))
+        .andExpect(view().name("rating/update"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("Moody's rating")))
+        .andExpect(content().string(containsString("mood_test")))
+
+        .andExpect(content().string(containsString("Sand PRating")))
+        .andExpect(content().string(containsString("sand_test")))
+
+        .andExpect(content().string(containsString("Fitch rating")))
+        .andExpect(content().string(containsString("fitch_test")))
+
+        .andExpect(content().string(containsString("Order number")))
+        .andExpect(content().string(containsString("3")));
+  }
+
+  @Test
+  void givenAExistingRatingWhenValidUpdateThenRatingIsUpdatedAndCurveHomeDisplayed() throws Exception {
+    //Given
+    when(service.update(anyInt(),any())).thenReturn(rating);
+    when(service.getAll()).thenReturn(List.of(rating));
+
+    //When
+    mockMvc.perform(post("/rating/update/1")
+            .param("moodysRating","mood_test")
+            .param("sandPRating","sand_test")
+            .param("fitchRating","fitch_test")
+            .param("orderNumber",String.valueOf(3)))
+        .andExpect(view().name("rating/list"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("1")))
+        .andExpect(content().string(containsString("mood_test")))
+        .andExpect(content().string(containsString("sand_test")))
+        .andExpect(content().string(containsString("fitch_test")))
+        .andExpect(content().string(containsString("3")));
+  }
+
+  @Test
+  void givenAExistingRatingWhenNotValidUpdateThenRatingUpdateFormDisplayedWithErrorMessage() throws Exception {
+    //When
+    mockMvc.perform(post("/rating/update/1"))
+        .andExpect(view().name("rating/update"))
         .andExpect(status().isOk())
 
         .andExpect(content().string(containsString("Moody&#39;s rating must not be empty")))

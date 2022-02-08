@@ -27,4 +27,17 @@ public class RatingServiceImpl implements RatingService{
   public Rating create(Rating ratingToSave) {
     return repository.save(ratingToSave);
   }
+
+  @Override
+  @Transactional
+  public Rating getById(Integer id) {
+    return repository.getById(id);
+  }
+
+  @Override
+  @Transactional
+  public Rating update(Integer id, Rating ratingToUpdate) {
+    ratingToUpdate.setId(id);
+    return repository.save(ratingToUpdate);
+  }
 }

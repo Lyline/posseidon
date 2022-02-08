@@ -10,8 +10,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 class RatingServiceTest {
   private final RatingRepository repository= mock(RatingRepository.class);
@@ -64,5 +64,31 @@ class RatingServiceTest {
 
     //Then
     assertSame(actual,rating);
+  }
+
+  @Test
+  void givenAExistingRatingWhenGetByIdThenRatingIsFounded() {
+    //Given
+    when(repository.getById(anyInt())).thenReturn(rating);
+
+    //When
+    Rating actual= classUnderTest.getById(1);
+
+    //Then
+    assertSame(actual,rating);
+    verify(repository,times(1)).getById(1);
+  }
+
+  @Test
+  void givenAExistingRatingWhenUpdateThenRatingIsUpdated() {
+    //Given
+    when(repository.save(any())).thenReturn(rating);
+
+    //When
+    Rating actual= classUnderTest.update(1,ratingToSave);
+
+    //Then
+    assertSame(actual,rating);
+    verify(repository,times(1)).save(ratingToSave);
   }
 }

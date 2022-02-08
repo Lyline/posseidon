@@ -9,4 +9,6 @@ import java.util.List;
 public interface RatingService {
   List<Rating> getAll();
   Rating create(Rating ratingToSave);
+  Rating getById(Integer id);
+  Rating update(Integer id, Rating ratingToUpdate);
 }
