@@ -12,8 +12,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(RatingController.class)
@@ -80,5 +82,40 @@ public class RatingControllerTest {
 
         .andExpect(content().string(containsString("Cancel")))
         .andExpect(content().string(containsString("Add Rating")));
+  }
+
+  @Test
+  void givenANewRatingValidWhenCreateThenRatingIsSavedAndRatingHomeDisplayed() throws Exception {
+    //Given
+    when(service.create(any())).thenReturn(rating);
+    when(service.getAll()).thenReturn(List.of(rating));
+
+    //When
+    mockMvc.perform(post("/rating/validate")
+            .param("moodysRating","mood_test")
+            .param("sandPRating","sand_test")
+            .param("fitchRating","fitch_test")
+            .param("orderNumber",String.valueOf(3)))
+        .andExpect(view().name("rating/list"))
+        .andExpect(status().isCreated())
+
+        .andExpect(content().string(containsString("1")))
+        .andExpect(content().string(containsString("mood_test")))
+        .andExpect(content().string(containsString("sand_test")))
+        .andExpect(content().string(containsString("fitch_test")))
+        .andExpect(content().string(containsString("3")));
+  }
+
+  @Test
+  void givenANewRatingNotValidWhenCreateThenRatingFormDisplayedWithErrorMessage() throws Exception {
+    //When
+    mockMvc.perform(post("/rating/validate"))
+        .andExpect(view().name("rating/add"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("Moody&#39;s rating must not be empty")))
+        .andExpect(content().string(containsString("Sand rating must not be empty")))
+        .andExpect(content().string(containsString("Fitch rating must not be empty")))
+        .andExpect(content().string(containsString("Order number must not be null")));
   }
 }

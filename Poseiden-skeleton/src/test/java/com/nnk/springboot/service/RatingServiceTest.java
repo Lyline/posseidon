@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +19,7 @@ class RatingServiceTest {
 
   private final Rating rating= new Rating();
   private final Rating rating1= new Rating();
+  private final Rating ratingToSave= new Rating();
 
   @BeforeEach
   void setUp() {
@@ -31,6 +34,12 @@ class RatingServiceTest {
     rating1.setSandPRating("sand_test1");
     rating1.setFitchRating("fitch_test1");
     rating1.setOrderNumber(4);
+
+    ratingToSave.setMoodysRating("mood_test");
+    ratingToSave.setSandPRating("sand_test");
+    ratingToSave.setFitchRating("fitch_test");
+    ratingToSave.setOrderNumber(3);
+
   }
 
   @Test
@@ -43,5 +52,17 @@ class RatingServiceTest {
 
     //Then
     assertThat(actual.size()).isEqualTo(2);
+  }
+
+  @Test
+  void givenANewRatingWhenCreateThenRatingIsSaved() {
+    //Given
+    when(repository.save(any())).thenReturn(rating);
+
+    //When
+    Rating actual= classUnderTest.create(ratingToSave);
+
+    //Then
+    assertSame(actual,rating);
   }
 }

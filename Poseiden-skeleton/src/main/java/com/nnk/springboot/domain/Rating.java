@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -18,15 +20,19 @@ public class Rating {
   private Integer id;
 
   @Column(columnDefinition = "VARCHAR(125)")
+  @NotBlank(message = "Moody's rating must not be empty")
   private String moodysRating;
 
   @Column(columnDefinition = "VARCHAR(125)")
+  @NotBlank(message = "Sand rating must not be empty")
   private String sandPRating;
 
   @Column(columnDefinition = "VARCHAR(125)")
+  @NotBlank(message = "Fitch rating must not be empty")
   private String fitchRating;
 
   @Column(columnDefinition = "TINYINT")
+  @NotNull(message = "Order number must not be null")
   private Integer orderNumber;
 
   public Rating(String moodysRating, String sandPRating, String fitchRating, Integer orderNumber) {

@@ -21,4 +21,10 @@ public class RatingServiceImpl implements RatingService{
   public List<Rating> getAll() {
     return repository.findAll();
   }
+
+  @Override
+  @Transactional
+  public Rating create(Rating ratingToSave) {
+    return repository.save(ratingToSave);
+  }
 }

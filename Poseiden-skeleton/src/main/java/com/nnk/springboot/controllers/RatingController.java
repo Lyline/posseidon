@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
@@ -35,9 +36,17 @@ public class RatingController {
     }
 
     @PostMapping("/rating/validate")
-    public String validate(@Valid Rating rating, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Rating list
-        return "rating/add";
+    public String validate(@Valid Rating rating, BindingResult result,
+                           Model model, HttpServletResponse response) {
+        if (result.hasErrors()){
+            return "rating/add";
+        }
+
+        service.create(rating);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+
+        model.addAttribute("ratings",service.getAll());
+        return "rating/list";
     }
 
     @GetMapping("/rating/update/{id}")

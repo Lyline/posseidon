@@ -8,4 +8,5 @@ import java.util.List;
 @Service
 public interface RatingService {
   List<Rating> getAll();
+  Rating create(Rating ratingToSave);
 }
