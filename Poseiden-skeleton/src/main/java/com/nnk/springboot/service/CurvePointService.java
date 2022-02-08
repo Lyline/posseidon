@@ -9,4 +9,6 @@ import java.util.List;
 public interface CurvePointService {
   List<CurvePoint>getAll();
   CurvePoint create(CurvePoint curvePoint);
+  CurvePoint getById(Integer id);
+  CurvePoint update(Integer id, CurvePoint curveToUpdate);
 }

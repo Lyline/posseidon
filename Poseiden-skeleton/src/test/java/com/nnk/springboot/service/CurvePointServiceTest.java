@@ -10,8 +10,8 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 class CurvePointServiceTest {
   private final CurvePointRepository repository= mock(CurvePointRepository.class);
@@ -49,6 +49,7 @@ class CurvePointServiceTest {
 
     //Then
     assertThat(actual.size()).isEqualTo(2);
+    verify(repository,times(1)).findAll();
   }
 
   @Test
@@ -61,5 +62,19 @@ class CurvePointServiceTest {
 
     //Then
     assertSame(actual,curve);
+    verify(repository,times(1)).save(curveToSave);
+  }
+
+  @Test
+  void givenAExistingCurvePointWhenGetByIdThenCurveIsFounded() {
+    //Given
+    when(repository.getById(anyInt())).thenReturn(curve);
+
+    //When
+    CurvePoint actual= classUnderTest.getById(1);
+
+    //Then
+    assertSame(actual,curve);
+    verify(repository,times(1)).getById(1);
   }
 }

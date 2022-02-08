@@ -43,7 +43,7 @@
 				<td th:text="${curve.curveId}"></td>
 				<td th:text="${curve.term}"></td>
 				<td th:text="${curve.value}"></td>
-				<td>Edit - Delete</td>
+				<td><a th:href="@{/curvePoint/update/{id}(id=${curve.id})}">Edit</a> - Delete</td>
 			</tr>
 			</tbody>
 		</table>

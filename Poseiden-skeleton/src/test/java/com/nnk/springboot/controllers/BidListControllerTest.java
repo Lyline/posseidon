@@ -26,11 +26,7 @@ class BidListControllerTest {
   private MockMvc mockMvc;
 
   @MockBean
-  private final BidListServiceImpl service;
-
-  BidListControllerTest(BidListServiceImpl service) {
-    this.service = service;
-  }
+  private BidListServiceImpl service;
 
   @Test
   void givenTwoBidListSavedWhenGetHomeThenDisplayedBidListTableWithTwoResults() throws Exception {

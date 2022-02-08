@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,6 +47,7 @@ class CurvePointControllerTest {
   void givenTwoCurvePointWhenCurveHomeThenCurveHomeTableWithTwoElementsDisplayed() throws Exception {
     //Given
     when(service.getAll()).thenReturn(List.of(curve,curve1));
+
     //When
     mockMvc.perform(get("/curvePoint/list"))
         .andExpect(view().name("curvePoint/list"))
@@ -60,8 +62,6 @@ class CurvePointControllerTest {
         .andExpect(content().string(containsString("20")))
         .andExpect(content().string(containsString("14")))
         .andExpect(content().string(containsString("4")));
-
-    //Then
   }
 
   @Test
@@ -101,8 +101,6 @@ class CurvePointControllerTest {
 
   @Test
   void givenANewCurvePointNotValidWhenCreateThenCurveFormDisplayedWithErrorMessage() throws Exception {
-    //Given
-
     //When
     mockMvc.perform(post("/curvePoint/validate"))
         .andExpect(view().name("curvePoint/add"))
@@ -113,17 +111,58 @@ class CurvePointControllerTest {
         .andExpect(content().string(containsString("Value must not be null")));
   }
   @Test
-  void showUpdateForm() {
+  void showUpdateForm() throws Exception {
     //Given
+    when(service.getById(anyInt())).thenReturn(curve);
+
     //When
-    //Then
+    mockMvc.perform(get("/curvePoint/update/1")
+        .param("curveId","10")
+        .param("term","12")
+        .param("value","3"))
+        .andExpect(view().name("curvePoint/update"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("Curve Id")))
+        .andExpect(content().string(containsString("10")))
+
+        .andExpect(content().string(containsString("Term")))
+        .andExpect(content().string(containsString("12")))
+
+        .andExpect(content().string(containsString("Value")))
+        .andExpect(content().string(containsString("3")));
   }
 
   @Test
-  void updateBid() {
+  void givenAExistingCurvePointWhenValidUpdateThenCurveIsUpdatedAndCurveHomeDisplayed() throws Exception {
     //Given
+    when(service.update(anyInt(),any())).thenReturn(curve);
+    when(service.getAll()).thenReturn(List.of(curve));
+
     //When
-    //Then
+    mockMvc.perform(post("/curvePoint/update/1")
+        .param("curveId","10")
+        .param("Term","12")
+        .param("value","3"))
+        .andExpect(view().name("/curvePoint/list"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("1")))
+        .andExpect(content().string(containsString("10")))
+        .andExpect(content().string(containsString("12")))
+        .andExpect(content().string(containsString("3")));
+  }
+
+  @Test
+  void givenAExistingCurvePointWhenNotValidUpdateThenCurveUpdateFormDisplayedWithErrorMessage() throws Exception {
+    //When
+    mockMvc.perform(post("/curvePoint/update/1"))
+        .andExpect(view().name("curvePoint/update"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("Curve Id must not be null")))
+        .andExpect(content().string(containsString("Term must not be null")))
+        .andExpect(content().string(containsString("Value must not be null")));
   }
 
   @Test

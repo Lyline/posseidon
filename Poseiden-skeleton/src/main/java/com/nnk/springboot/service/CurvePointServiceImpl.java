@@ -16,6 +16,7 @@ public class CurvePointServiceImpl implements CurvePointService {
   }
 
   @Override
+  @Transactional
   public List<CurvePoint> getAll() {
     return repository.findAll();
   }
@@ -24,5 +25,18 @@ public class CurvePointServiceImpl implements CurvePointService {
   @Transactional
   public CurvePoint create(CurvePoint curvePoint) {
     return repository.save(curvePoint);
+  }
+
+  @Override
+  @Transactional
+  public CurvePoint getById(Integer id) {
+    return repository.getById(id);
+  }
+
+  @Override
+  @Transactional
+  public CurvePoint update(Integer id, CurvePoint curveToUpdate) {
+    curveToUpdate.setId(id);
+    return repository.save(curveToUpdate);
   }
 }
