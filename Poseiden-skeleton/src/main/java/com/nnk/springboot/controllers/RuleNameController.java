@@ -1,6 +1,9 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.service.RuleNameServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,15 +13,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class RuleNameController {
-    // TODO: Inject RuleName service
+    private final RuleNameServiceImpl service;
+    private final Logger logger= LoggerFactory.getLogger(RuleNameController.class);
+
+    public RuleNameController(RuleNameServiceImpl service) {
+        this.service = service;
+    }
 
     @RequestMapping("/ruleName/list")
-    public String home(Model model)
-    {
-        // TODO: find all RuleName, add to model
+    public String home(Model model){
+        List<RuleName>ruleNames= service.getAll();
+
+        logger.info("Get - all rule name list : "+ruleNames.size()+" rule name(s) ");
+        model.addAttribute("ruleNames",ruleNames);
         return "ruleName/list";
     }
 

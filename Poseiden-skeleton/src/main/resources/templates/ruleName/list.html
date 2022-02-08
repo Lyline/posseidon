@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<html lang="en-us"
+	  xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
 <title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+<link rel="stylesheet" href="/css/bootstrap.min.css" >
 </head>
 <body>
 <div class="container">
@@ -41,6 +42,16 @@
 			</thead>
 			<tbody>
 			<!-- TODO: Show all RuleName to the table, the Action column will have Edit & Delete buttons -->
+			<tr th:each="ruleName:${ruleNames}">
+				<td th:text="${ruleName.id}"></td>
+				<td th:text="${ruleName.name}"></td>
+				<td th:text="${ruleName.description}"></td>
+				<td th:text="${ruleName.json}"></td>
+				<td th:text="${ruleName.template}"></td>
+				<td th:text="${ruleName.sqlStr}"></td>
+				<td th:text="${ruleName.sqlPart}"></td>
+				<td>Edit - Delete</td>
+			</tr>
 			</tbody>
 		</table>
 	</div>
