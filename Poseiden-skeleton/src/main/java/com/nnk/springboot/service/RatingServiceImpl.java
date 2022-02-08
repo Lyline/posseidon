@@ -40,4 +40,9 @@ public class RatingServiceImpl implements RatingService{
     ratingToUpdate.setId(id);
     return repository.save(ratingToUpdate);
   }
+
+  @Override
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }

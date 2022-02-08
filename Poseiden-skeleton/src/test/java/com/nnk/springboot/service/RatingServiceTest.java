@@ -91,4 +91,12 @@ class RatingServiceTest {
     assertSame(actual,rating);
     verify(repository,times(1)).save(ratingToSave);
   }
+
+  @Test
+  void givenAExistingRatingWhenDeleteByIdThenRatingIsDeleted() {
+    //When
+    classUnderTest.delete(1);
+    //Then
+    verify(repository,times(1)).deleteById(1);
+  }
 }

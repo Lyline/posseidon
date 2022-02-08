@@ -11,4 +11,5 @@ public interface RatingService {
   Rating create(Rating ratingToSave);
   Rating getById(Integer id);
   Rating update(Integer id, Rating ratingToUpdate);
+  void delete(Integer id);
 }

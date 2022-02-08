@@ -181,4 +181,12 @@ public class RatingControllerTest {
         .andExpect(content().string(containsString("Fitch rating must not be empty")))
         .andExpect(content().string(containsString("Order number must not be null")));
   }
+
+  @Test
+  void givenACurvePointWhenDeleteCurveThenCurvePointIsDeletedAndCurveHomeDisplayed() throws Exception {
+    //When
+    mockMvc.perform(get("/rating/delete/1"))
+        .andExpect(view().name("rating/list"))
+        .andExpect(status().isOk());
+  }
 }
