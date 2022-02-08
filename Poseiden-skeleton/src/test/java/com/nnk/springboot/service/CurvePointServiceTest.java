@@ -77,4 +77,12 @@ class CurvePointServiceTest {
     assertSame(actual,curve);
     verify(repository,times(1)).getById(1);
   }
+
+  @Test
+  void givenAExistingCurvePointWhenDeleteByIdThenCurveIsDeleted() {
+    //When
+    classUnderTest.delete(1);
+    //Then
+    verify(repository,times(1)).deleteById(1);
+  }
 }

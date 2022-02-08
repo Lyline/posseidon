@@ -88,12 +88,15 @@ public class CurvePointController {
         service.update(id,curvePoint);
 
         model.addAttribute("curves",service.getAll());
-        return "/curvePoint/list";
+        return "curvePoint/list";
     }
 
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         // TODO: Find Curve by Id and delete the Curve, return to Curve list
-        return "redirect:/curvePoint/list";
+        service.delete(id);
+
+        model.addAttribute("curves",service.getAll());
+        return "curvePoint/list";
     }
 }

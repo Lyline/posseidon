@@ -144,7 +144,7 @@ class CurvePointControllerTest {
         .param("curveId","10")
         .param("Term","12")
         .param("value","3"))
-        .andExpect(view().name("/curvePoint/list"))
+        .andExpect(view().name("curvePoint/list"))
         .andExpect(status().isOk())
 
         .andExpect(content().string(containsString("1")))
@@ -166,9 +166,10 @@ class CurvePointControllerTest {
   }
 
   @Test
-  void deleteBid() {
-    //Given
+  void givenACurvePointWhenDeleteCurveThenCurvePointIsDeletedAndCurveHomeDisplayed() throws Exception {
     //When
-    //Then
+    mockMvc.perform(get("/curvePoint/delete/1"))
+        .andExpect(view().name("curvePoint/list"))
+        .andExpect(status().isOk());
   }
 }

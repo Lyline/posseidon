@@ -39,4 +39,9 @@ public class CurvePointServiceImpl implements CurvePointService {
     curveToUpdate.setId(id);
     return repository.save(curveToUpdate);
   }
+
+  @Override
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }
