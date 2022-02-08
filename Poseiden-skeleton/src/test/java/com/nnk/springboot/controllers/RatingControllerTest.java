@@ -65,4 +65,20 @@ public class RatingControllerTest {
         .andExpect(content().string(containsString("fitch_test1")))
         .andExpect(content().string(containsString("4")));
   }
+
+  @Test
+  void showRatingForm() throws Exception {
+    //When
+    mockMvc.perform(get("/rating/add"))
+        .andExpect(view().name("rating/add"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("Moody's rating")))
+        .andExpect(content().string(containsString("Sand PRating")))
+        .andExpect(content().string(containsString("Fitch rating")))
+        .andExpect(content().string(containsString("Order number")))
+
+        .andExpect(content().string(containsString("Cancel")))
+        .andExpect(content().string(containsString("Add Rating")));
+  }
 }

@@ -14,11 +14,34 @@
 	</div>
 
 	<div class="row">
-		<form action="#" th:action="@{/rating/validate}" th:object="${rating}" method="post" class="form-horizontal" style="width: 100%">
-			<!--
-			TODO: Create a form to input the values of Rating, there are 2 buttons: Save data and Cancel to the list Rating
-			 -->
+		<form action="#" th:action="@{/rating/validate}" th:object="${rating}" method="post" class="form-horizontal"
+			  style="width: 100%">
 
+			<div class="mb-3">
+				<label for="moodysRating" class="form-label">Moody's rating</label>
+				<input type="text" class="form-control" id="moodysRating" th:field="*{moodysRating}">
+				<p class="text-danger" th:if="${#fields.hasErrors('moodysRating')}" th:errors="*{moodysRating}"></p>
+			</div>
+			<div class="mb-3">
+				<label for="sandPRating" class="form-label">Sand PRating</label>
+				<input type="text" class="form-control" id="sandPRating" th:field="*{sandPRating}">
+				<p class="text-danger" th:if="${#fields.hasErrors('sandPRating')}" th:errors="*{sandPRating}"></p>
+			</div>
+			<div class="mb-3">
+				<label for="fitchRating" class="form-label">Fitch rating</label>
+				<input type="text" class="form-control" id="fitchRating" th:field="*{fitchRating}">
+				<p class="text-danger"  th:if="${#fields.hasErrors('fitchRating')}" th:errors="*{fitchRating}"></p>
+			</div>
+			<div class="mb-3">
+				<label for="orderNumber" class="form-label">Order number</label>
+				<input type="text" class="form-control" id="orderNumber" th:field="*{orderNumber}">
+				<p class="text-danger"  th:if="${#fields.hasErrors('orderNumber')}" th:errors="*{orderNumber}"></p>
+			</div>
+
+			<div>
+				<a class="btn btn-danger" th:href="@{/rating/list}">Cancel</a>
+				<button class="btn btn-primary" type="submit">Add Rating</button>
+			</div>
 		</form>
 	</div>
 
