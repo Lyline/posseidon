@@ -20,4 +20,10 @@ public class RuleNameServiceImpl implements RuleNameService{
   public List<RuleName> getAll() {
     return repository.findAll();
   }
+
+  @Override
+  @Transactional
+  public RuleName create(RuleName ruleName) {
+    return repository.save(ruleName);
+  }
 }

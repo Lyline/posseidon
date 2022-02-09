@@ -8,4 +8,5 @@ import java.util.List;
 @Service
 public interface RuleNameService {
   List<RuleName> getAll();
+  RuleName create(RuleName ruleName);
 }

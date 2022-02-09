@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -34,14 +35,24 @@ public class RuleNameController {
     }
 
     @GetMapping("/ruleName/add")
-    public String addRuleForm(RuleName bid) {
+    public String addRuleForm(RuleName ruleName, Model model) {
+        model.addAttribute("ruleName", ruleName);
         return "ruleName/add";
     }
 
     @PostMapping("/ruleName/validate")
-    public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return RuleName list
-        return "ruleName/add";
+    public String validate(@Valid RuleName ruleName, BindingResult result,
+                           Model model, HttpServletResponse response) {
+        if (result.hasErrors()){
+            return "ruleName/add";
+        }
+        service.create(ruleName);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+
+        logger.info("Post - Rule name : Name ="+ruleName.getName()+", Description ="
+            +ruleName.getDescription()+" is saved");
+        model.addAttribute("ruleNames", service.getAll());
+        return "ruleName/list";
     }
 
     @GetMapping("/ruleName/update/{id}")
