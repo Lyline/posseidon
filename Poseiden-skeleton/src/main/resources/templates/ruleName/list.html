@@ -49,7 +49,8 @@
 				<td th:text="${ruleName.template}"></td>
 				<td th:text="${ruleName.sqlStr}"></td>
 				<td th:text="${ruleName.sqlPart}"></td>
-				<td><a th:href="@{/ruleName/update/{id}(id=${ruleName.id})}">Edit</a> - Delete</td>
+				<td><a th:href="@{/ruleName/update/{id}(id=${ruleName.id})}">Edit</a> -
+					<a th:href="@{/ruleName/delete/{id}(id=${ruleName.id})}">Delete</a></td>
 			</tr>
 			</tbody>
 		</table>

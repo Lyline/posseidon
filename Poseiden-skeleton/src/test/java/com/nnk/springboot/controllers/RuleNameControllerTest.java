@@ -220,4 +220,12 @@ class RuleNameControllerTest {
         .andExpect(content().string(containsString("SQL String must not be empty")))
         .andExpect(content().string(containsString("SQL Part must not be empty")));
   }
+
+  @Test
+  void givenARuleWhenDeleteThenRuleIsDeletedAndRuleHomeDisplayed() throws Exception {
+    //When
+    mockMvc.perform(get("/ruleName/delete/1"))
+        .andExpect(view().name("ruleName/list"))
+        .andExpect(status().isOk());
+  }
 }

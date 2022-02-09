@@ -11,4 +11,5 @@ public interface RuleNameService {
   RuleName create(RuleName ruleName);
   RuleName getById(Integer id);
   RuleName update(Integer id, RuleName ruleNameToUpdate);
+  void delete(Integer id);
 }

@@ -96,4 +96,12 @@ class RuleNameServiceTest {
     assertSame(actual,ruleName);
     verify(repository,times(1)).save(ruleNameToSave);
   }
+
+  @Test
+  void givenAExistingRuleWhenDeleteThenRuleIsDeleted() {
+    //When
+    classUnderTest.delete(1);
+    //Then
+    verify(repository,times(1)).deleteById(1);
+  }
 }

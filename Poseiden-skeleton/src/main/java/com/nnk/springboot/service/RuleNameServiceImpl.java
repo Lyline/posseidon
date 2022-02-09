@@ -39,4 +39,10 @@ public class RuleNameServiceImpl implements RuleNameService{
     ruleNameToUpdate.setId(id);
     return repository.save(ruleNameToUpdate);
   }
+
+  @Override
+  @Transactional
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }
