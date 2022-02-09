@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +19,7 @@ class TradeServiceTest {
 
   private final Trade trade= new Trade();
   private final Trade trade1= new Trade();
+  private final Trade tradeToSave= new Trade();
 
   @BeforeEach
   void setUp() {
@@ -29,10 +32,14 @@ class TradeServiceTest {
     trade.setAccount("Account_test1");
     trade.setType("Type_test1");
     trade.setBuyQuantity(20);
+
+    tradeToSave.setAccount("Account_test");
+    tradeToSave.setType("Type_test");
+    tradeToSave.setBuyQuantity(10);
   }
 
   @Test
-  void givenTwoRulesWhenGetAllThenReturnListOfRules() {
+  void givenTwoTradesWhenGetAllThenReturnListOfTrade() {
     //Given
     when(repository.findAll()).thenReturn(List.of(trade,trade1));
 
@@ -41,5 +48,17 @@ class TradeServiceTest {
 
     //Then
     assertThat(actual.size()).isEqualTo(2);
+  }
+
+  @Test
+  void givenANewTradeWhenCreateThenTradeIsSaved() {
+    //Given
+    when(repository.save(any())).thenReturn(trade);
+
+    //When
+    Trade actual= classUnderTest.create(tradeToSave);
+
+    //Then
+    assertSame(actual,trade);
   }
 }

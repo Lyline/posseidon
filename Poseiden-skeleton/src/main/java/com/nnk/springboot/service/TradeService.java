@@ -8,4 +8,5 @@ import java.util.List;
 @Service
 public interface TradeService {
   List<Trade>getAll();
+  Trade create(Trade trade);
 }

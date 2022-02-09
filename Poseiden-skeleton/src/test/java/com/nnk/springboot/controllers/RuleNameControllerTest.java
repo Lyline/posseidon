@@ -100,13 +100,6 @@ class RuleNameControllerTest {
     when(service.create(any())).thenReturn(ruleName);
     when(service.getAll()).thenReturn(List.of(ruleName));
 
-
-    ruleName.setName("Name_test");
-    ruleName.setDescription("Description_test");
-    ruleName.setJson("Json_test");
-    ruleName.setTemplate("Template_test");
-    ruleName.setSqlStr("Sql_String_test");
-    ruleName.setSqlPart("Sql_Part_test");
     //When
     mockMvc.perform(post("/ruleName/validate")
             .param("name","Name_test")

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,14 +44,25 @@ public class TradeController {
     }
 
     @GetMapping("/trade/add")
-    public String addUser(Trade bid) {
+    public String addTrade(Trade trade, Model model) {
+        model.addAttribute("trade",trade);
         return "trade/add";
     }
 
     @PostMapping("/trade/validate")
-    public String validate(@Valid Trade trade, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Trade list
-        return "trade/add";
+    public String validate(@Valid Trade trade, BindingResult result,
+                           Model model, HttpServletResponse response) {
+        if (result.hasErrors()){
+            return "trade/add";
+        }
+
+        service.create(trade);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+
+        logger.info("Create - Trade : Account ="+trade.getAccount()+", Type ="
+            + trade.getType()+", Buy quantity ="+ trade.getBuyQuantity()+" is saved");
+        model.addAttribute("trades",service.getAll());
+        return "trade/list";
     }
 
     @GetMapping("/trade/update/{id}")

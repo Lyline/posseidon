@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,14 +20,15 @@ public class Trade {
   @Column(columnDefinition = "TINYINT(4)")
   private Integer tradeId;
 
-  @NotNull
+  @NotBlank(message = "Account must not be empty")
   @Column(columnDefinition = "VARCHAR(30)")
   private String account;
 
-  @NotNull
+  @NotBlank(message = "Type must not be empty")
   @Column(columnDefinition = "VARCHAR(30)")
   private String type;
 
+  @DecimalMin(value="0.1", message = "Buy quantity must not be null")
   @Column(columnDefinition = "DOUBLE")
   private double buyQuantity;
 
