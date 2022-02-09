@@ -9,4 +9,6 @@ import java.util.List;
 public interface RuleNameService {
   List<RuleName> getAll();
   RuleName create(RuleName ruleName);
+  RuleName getById(Integer id);
+  RuleName update(Integer id, RuleName ruleNameToUpdate);
 }

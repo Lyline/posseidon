@@ -29,7 +29,7 @@ public class RuleNameController {
     public String home(Model model){
         List<RuleName>ruleNames= service.getAll();
 
-        logger.info("Get - all rule name list : "+ruleNames.size()+" rule name(s) ");
+        logger.info("Read - all rule name list : "+ruleNames.size()+" rule name(s) ");
         model.addAttribute("ruleNames",ruleNames);
         return "ruleName/list";
     }
@@ -49,7 +49,7 @@ public class RuleNameController {
         service.create(ruleName);
         response.setStatus(HttpServletResponse.SC_CREATED);
 
-        logger.info("Post - Rule name : Name ="+ruleName.getName()+", Description ="
+        logger.info("Create - Rule name : Name ="+ruleName.getName()+", Description ="
             +ruleName.getDescription()+" is saved");
         model.addAttribute("ruleNames", service.getAll());
         return "ruleName/list";
@@ -57,15 +57,28 @@ public class RuleNameController {
 
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get RuleName by Id and to model then show to the form
+
+        RuleName ruleName= service.getById(id);
+
+        logger.info("Read - Rule name : Name ="+ruleName.getName()+", Description ="
+            +ruleName.getDescription());
+        model.addAttribute("ruleName",ruleName);
         return "ruleName/update";
     }
 
     @PostMapping("/ruleName/update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
                              BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update RuleName and return RuleName list
-        return "redirect:/ruleName/list";
+       if(result.hasErrors()){
+            return "ruleName/update";
+        }
+
+        service.update(id,ruleName);
+
+        logger.info("Update - Rule name : Name ="+ruleName.getName()+", Description ="
+            +ruleName.getDescription()+" is saved");
+        model.addAttribute("ruleNames",service.getAll());
+        return "ruleName/list";
     }
 
     @GetMapping("/ruleName/delete/{id}")

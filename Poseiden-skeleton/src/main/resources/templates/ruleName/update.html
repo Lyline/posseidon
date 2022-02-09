@@ -15,9 +15,41 @@
 
 	<div class="row">
 		<form action="#" th:action="@{/ruleName/update/{id}(id=${ruleName.id})}" th:object="${ruleName}" method="post" class="form-horizontal" style="width: 100%">
-			<!--
-			TODO: Create a form to edit the values of RuleName, there are 2 buttons: Update data and Cancel to the RuleName
-			 -->
+			<div class="mb-3">
+				<label for="name" class="form-label">Name</label>
+				<input type="text" class="form-control" id="name" th:field="*{name}">
+				<p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+			</div>
+			<div class="mb-3">
+				<label for="description" class="form-label">Description</label>
+				<input type="text" class="form-control" id="description" th:field="*{description}">
+				<p class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+			</div>
+			<div class="mb-3">
+				<label for="json" class="form-label">Json</label>
+				<input type="text" class="form-control" id="json" th:field="*{json}">
+				<p class="text-danger"  th:if="${#fields.hasErrors('json')}" th:errors="*{json}"></p>
+			</div>
+			<div class="mb-3">
+				<label for="template" class="form-label">Template</label>
+				<input type="text" class="form-control" id="template" th:field="*{template}">
+				<p class="text-danger"  th:if="${#fields.hasErrors('template')}" th:errors="*{template}"></p>
+			</div>
+			<div class="mb-3">
+				<label for="sqlString" class="form-label">SQL String</label>
+				<input type="text" class="form-control" id="sqlString" th:field="*{sqlStr}">
+				<p class="text-danger"  th:if="${#fields.hasErrors('sqlStr')}" th:errors="*{sqlStr}"></p>
+			</div>
+			<div class="mb-3">
+				<label for="sqlPart" class="form-label">SQL Part</label>
+				<input type="text" class="form-control" id="sqlPart" th:field="*{sqlPart}">
+				<p class="text-danger"  th:if="${#fields.hasErrors('sqlPart')}" th:errors="*{sqlPart}"></p>
+			</div>
+
+			<div>
+				<a class="btn btn-danger" th:href="@{/ruleName/list}">Cancel</a>
+				<button class="btn btn-primary" type="submit">Update Rule Name</button>
+			</div>
 
 		</form>
 	</div>

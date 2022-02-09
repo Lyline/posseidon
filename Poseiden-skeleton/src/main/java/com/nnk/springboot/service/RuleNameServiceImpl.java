@@ -26,4 +26,17 @@ public class RuleNameServiceImpl implements RuleNameService{
   public RuleName create(RuleName ruleName) {
     return repository.save(ruleName);
   }
+
+  @Override
+  @Transactional
+  public RuleName getById(Integer id) {
+    return repository.getById(id);
+  }
+
+  @Override
+  @Transactional
+  public RuleName update(Integer id, RuleName ruleNameToUpdate) {
+    ruleNameToUpdate.setId(id);
+    return repository.save(ruleNameToUpdate);
+  }
 }

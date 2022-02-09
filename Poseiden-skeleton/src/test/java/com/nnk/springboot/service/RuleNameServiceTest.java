@@ -10,8 +10,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 class RuleNameServiceTest {
   private final RuleNameRepository repository= mock(RuleNameRepository.class);
@@ -69,5 +69,31 @@ class RuleNameServiceTest {
 
     //Then
     assertSame(actual,ruleName);
+  }
+
+  @Test
+  void givenAExistingRuleWhenGetByIdThenRuleIsFounded() {
+    //Given
+    when(repository.getById(anyInt())).thenReturn(ruleName);
+
+    //When
+    RuleName actual= classUnderTest.getById(1);
+
+    //Then
+    assertSame(actual,ruleName);
+    verify(repository,times(1)).getById(1);
+  }
+
+  @Test
+  void givenAExistingRuleWhenUpdateThenRuleIsSaved() {
+    //Given
+    when(repository.save(any())).thenReturn(ruleName);
+
+    //When
+    RuleName actual= classUnderTest.update(1,ruleNameToSave);
+
+    //Then
+    assertSame(actual,ruleName);
+    verify(repository,times(1)).save(ruleNameToSave);
   }
 }
