@@ -22,6 +22,7 @@ public class TradeTests {
 	@Test
 	public void tradeTest() {
 		Trade trade = new Trade("Trade Account", "Type");
+		trade.setBuyQuantity(1);
 
 		// Save
 		trade = tradeRepository.save(trade);

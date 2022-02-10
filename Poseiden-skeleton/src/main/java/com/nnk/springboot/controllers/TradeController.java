@@ -67,15 +67,27 @@ public class TradeController {
 
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Trade by Id and to model then show to the form
+        Trade trade= service.getById(id);
+
+        logger.info("Read - Trade : Account ="+trade.getAccount()+", Type ="
+            + trade.getType()+", Buy quantity ="+ trade.getBuyQuantity());
+        model.addAttribute("trade",trade);
         return "trade/update";
     }
 
     @PostMapping("/trade/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
                              BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Trade and return Trade list
-        return "redirect:/trade/list";
+        if (result.hasErrors()){
+            return "trade/update";
+        }
+
+        Trade tradeUpdate= service.update(id,trade);
+
+        logger.info("Update - Trade : Account ="+tradeUpdate.getAccount()+", Type ="
+            + tradeUpdate.getType()+", Buy quantity ="+ tradeUpdate.getBuyQuantity()+" is saved");
+        model.addAttribute("trades",service.getAll());
+        return "trade/list";
     }
 
     @GetMapping("/trade/delete/{id}")

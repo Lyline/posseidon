@@ -27,4 +27,17 @@ public class TradeServiceImpl implements TradeService{
   public Trade create(Trade trade) {
     return repository.save(trade);
   }
+
+  @Override
+  @Transactional
+  public Trade getById(Integer id) {
+    return repository.getById(id);
+  }
+
+  @Override
+  @Transactional
+  public Trade update(Integer id, Trade tradeToSave) {
+    tradeToSave.setTradeId(id);
+    return repository.save(tradeToSave);
+  }
 }

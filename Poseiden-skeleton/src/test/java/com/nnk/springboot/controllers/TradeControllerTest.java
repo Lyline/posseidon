@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -104,6 +105,65 @@ class TradeControllerTest {
     //When
     mockMvc.perform(post("/trade/validate"))
         .andExpect(view().name("trade/add"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("Account must not be empty")))
+        .andExpect(content().string(containsString("Type must not be empty")))
+        .andExpect(content().string(containsString("Buy quantity must not be null")));
+  }
+
+  @Test
+  void showUpdateForm() throws Exception {
+    //Given
+    when(service.getById(anyInt())).thenReturn(trade);
+
+    //When
+    mockMvc.perform(get("/trade/update/1")
+            .param("account","Account_test")
+            .param("type","Type_test")
+            .param("buyQuantity",String.valueOf(10)))
+        .andExpect(view().name("trade/update"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("Account")))
+        .andExpect(content().string(containsString("Account_test")))
+
+        .andExpect(content().string(containsString("Type")))
+        .andExpect(content().string(containsString("Type_test")))
+
+        .andExpect(content().string(containsString("Buy quantity")))
+        .andExpect(content().string(containsString("10")))
+
+        .andExpect(content().string(containsString("Cancel")))
+        .andExpect(content().string(containsString("Update Trade")));
+  }
+
+  @Test
+  void givenAExistingTradeWhenValidUpdateThenTradeIsUpdatedAndTradeHomeDisplayed() throws Exception {
+    //Given
+    when(service.update(anyInt(),any())).thenReturn(trade);
+    when(service.getAll()).thenReturn(List.of(trade));
+
+    //When
+    mockMvc.perform(post("/trade/update/1")
+        .param("account","Account_test")
+        .param("type","Type_test")
+        .param("buyQuantity",String.valueOf(10)))
+
+        .andExpect(view().name("trade/list"))
+        .andExpect(status().isOk())
+
+        .andExpect(content().string(containsString("1")))
+        .andExpect(content().string(containsString("Account_test")))
+        .andExpect(content().string(containsString("Type_test")))
+        .andExpect(content().string(containsString("10")));
+  }
+
+  @Test
+  void givenAExistingRuleWhenNotValidUpdateThenRuleUpdateFormDisplayedWithErrorMessages() throws Exception {
+    //When
+    mockMvc.perform(post("/trade/update/1"))
+        .andExpect(view().name("trade/update"))
         .andExpect(status().isOk())
 
         .andExpect(content().string(containsString("Account must not be empty")))

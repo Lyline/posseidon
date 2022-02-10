@@ -9,4 +9,6 @@ import java.util.List;
 public interface TradeService {
   List<Trade>getAll();
   Trade create(Trade trade);
+  Trade getById(Integer id);
+  Trade update(Integer id, Trade tradeToSave);
 }
