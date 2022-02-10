@@ -11,4 +11,5 @@ public interface TradeService {
   Trade create(Trade trade);
   Trade getById(Integer id);
   Trade update(Integer id, Trade tradeToSave);
+  void delete(Integer id);
 }

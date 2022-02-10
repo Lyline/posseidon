@@ -87,4 +87,12 @@ class TradeServiceTest {
     assertSame(actual,trade);
     verify(repository,times(1)).save(tradeToSave);
   }
+
+  @Test
+  void givenAExistingTradeWhenDeleteThenTradeIsDeleted() {
+    //When
+    classUnderTest.delete(1);
+    //Then
+    verify(repository,times(1)).deleteById(1);
+  }
 }

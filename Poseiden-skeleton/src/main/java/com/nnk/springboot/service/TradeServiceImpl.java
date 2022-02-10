@@ -40,4 +40,10 @@ public class TradeServiceImpl implements TradeService{
     tradeToSave.setTradeId(id);
     return repository.save(tradeToSave);
   }
+
+  @Override
+  @Transactional
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }

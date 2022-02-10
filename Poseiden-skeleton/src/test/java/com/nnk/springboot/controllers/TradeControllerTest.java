@@ -160,7 +160,7 @@ class TradeControllerTest {
   }
 
   @Test
-  void givenAExistingRuleWhenNotValidUpdateThenRuleUpdateFormDisplayedWithErrorMessages() throws Exception {
+  void givenAExistingTradeWhenNotValidUpdateThenTradeUpdateFormDisplayedWithErrorMessages() throws Exception {
     //When
     mockMvc.perform(post("/trade/update/1"))
         .andExpect(view().name("trade/update"))
@@ -169,5 +169,13 @@ class TradeControllerTest {
         .andExpect(content().string(containsString("Account must not be empty")))
         .andExpect(content().string(containsString("Type must not be empty")))
         .andExpect(content().string(containsString("Buy quantity must not be null")));
+  }
+
+  @Test
+  void givenATradeWhenDeleteThenTradeIsDeletedAndTradeHomeDisplayed() throws Exception {
+    //When
+    mockMvc.perform(get("/trade/delete/1"))
+        .andExpect(view().name("trade/list"))
+        .andExpect(status().isOk());
   }
 }
