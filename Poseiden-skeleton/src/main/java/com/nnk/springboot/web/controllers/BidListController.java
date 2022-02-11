@@ -1,8 +1,8 @@
-package com.nnk.springboot.controllers;
+package com.nnk.springboot.web.controllers;
 
-import com.nnk.springboot.controllers.dto.BidListDTO;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.service.BidListServiceImpl;
+import com.nnk.springboot.web.controllers.dto.BidListDTO;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

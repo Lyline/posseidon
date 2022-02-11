@@ -1,4 +1,4 @@
-package com.nnk.springboot.controllers.dto;
+package com.nnk.springboot.web.controllers.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

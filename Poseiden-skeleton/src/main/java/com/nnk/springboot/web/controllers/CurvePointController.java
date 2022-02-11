@@ -1,8 +1,8 @@
-package com.nnk.springboot.controllers;
+package com.nnk.springboot.web.controllers;
 
-import com.nnk.springboot.controllers.dto.CurvePointDTO;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.service.CurvePointServiceImpl;
+import com.nnk.springboot.web.controllers.dto.CurvePointDTO;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

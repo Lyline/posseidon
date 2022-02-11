@@ -1,4 +1,4 @@
-package com.nnk.springboot.controllers;
+package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.service.TradeServiceImpl;
