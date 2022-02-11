@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
@@ -28,6 +29,7 @@ public class BidList {
   @Column(columnDefinition = "VARCHAR(30)")
   private String type;
 
+  @NotNull(message = "Bid quantity must not be null")
   @DecimalMin(value = "0.1", message="Enter only numbers")
   @Column(columnDefinition = "DOUBLE")
   private double bidQuantity;

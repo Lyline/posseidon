@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.service.BidListServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -9,7 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,19 +28,30 @@ class BidListControllerTest {
   @MockBean
   private BidListServiceImpl service;
 
+  private final BidList bid= new BidList();
+  private final BidList bid1= new BidList();
+
+  @BeforeEach
+  void setUp() {
+    bid.setBidListId(1);
+    bid.setAccount("Account Test");
+    bid.setType("Type Test");
+    bid.setBidQuantity(10);
+
+    bid1.setBidListId(2);
+    bid1.setAccount("Account_Test1");
+    bid1.setType("Type_Test1");
+    bid1.setBidQuantity(20);
+  }
+
   @Test
   void givenTwoBidListSavedWhenGetHomeThenDisplayedBidListTableWithTwoResults() throws Exception {
     //Given
-    BidList bid= new BidList("Account Test", "Type Test", 10d);
-    bid.setBidListId(1);
-    BidList bid1= new BidList("Account_Test1", "Type_Test1 ", 20d);
-    bid1.setBidListId(2);
-
     when(service.getAll()).thenReturn(List.of(bid,bid1));
 
     //When
     mockMvc.perform(get("/bidList/list"))
-        .andExpect(view().name("bidList/list"))
+        .andExpect(view().name("/bidList/list"))
         .andExpect(status().isOk())
 
         .andExpect(content().string(containsString("1")))
@@ -61,7 +72,7 @@ class BidListControllerTest {
 
     //When
     mockMvc.perform(get("/bidList/list"))
-        .andExpect(view().name("bidList/list"))
+        .andExpect(view().name("/bidList/list"))
         .andExpect(status().isOk());
   }
 
@@ -70,7 +81,7 @@ class BidListControllerTest {
     //Given
     //When
     mockMvc.perform(get("/bidList/add"))
-        .andExpect(view().name("bidList/add"))
+        .andExpect(view().name("/bidList/add"))
         .andExpect(status().isOk())
 
         .andExpect(content().string(containsString("Account")))
@@ -83,18 +94,15 @@ class BidListControllerTest {
   @Test
   void givenANewBidListValidWhenValidateThenBidListIsSavedAndBidListHomeDisplayed() throws Exception {
     //Given
-    BidList bidSaved= new BidList("Account Test", "Type Test", 10d);
-    bidSaved.setBidListId(1);
-
-    when(service.create(any())).thenReturn(bidSaved);
-    when(service.getAll()).thenReturn(List.of(bidSaved));
+    when(service.create(any())).thenReturn(bid);
+    when(service.getAll()).thenReturn(List.of(bid));
 
     //When
     mockMvc.perform(post("/bidList/validate")
             .param("account","Account Test")
             .param("type","Type Test")
             .param("bidQuantity","10"))
-        .andExpect(view().name("bidList/list"))
+        .andExpect(view().name("/bidList/list"))
         .andExpect(status().isCreated())
 
         .andExpect(content().string(containsString("1")))
@@ -112,7 +120,7 @@ class BidListControllerTest {
             .param("account","")
             .param("type","")
             .param("bidQuantity", String.valueOf(0)))
-        .andExpect(view().name("bidList/add"))
+        .andExpect(view().name("/bidList/add"))
         .andExpect(status().isOk())
 
         .andExpect(content().string(containsString("Account is mandatory")))
@@ -121,29 +129,22 @@ class BidListControllerTest {
   }
 
     @Test
-  void givenAExistingBidListWhenShowBidListUpdateThenTheFormToUpdateWithBidListDisplayed() throws Exception {
+  void showUpdateForm() throws Exception {
     //Given
-    BidList bidRecorded=new BidList();
-    bidRecorded.setBidListId(1);
-    bidRecorded.setAccount("Account_Test");
-    bidRecorded.setType("Type_Test");
-    bidRecorded.setBidQuantity(10);
-
-    when(service.getBidListById(anyInt())).thenReturn(Optional.of(bidRecorded));
+    when(service.getById(anyInt())).thenReturn(bid);
 
     //When
-    mockMvc.perform(get("/bidList/update/1"))
-        .andExpect(view().name("bidList/update"))
+    mockMvc.perform(get("/bidList/update/1")
+            .param("account","Account Test")
+            .param("type","Type Test")
+            .param("bidQuantity","10"))
+
+        .andExpect(view().name("/bidList/update"))
         .andExpect(status().isOk())
 
         .andExpect(content().string(containsString("Account")))
-        .andExpect(content().string(containsString("Account_Test")))
-
         .andExpect(content().string(containsString("Type")))
-        .andExpect(content().string(containsString("Type_Test")))
-
         .andExpect(content().string(containsString("Bid quantity")))
-        .andExpect(content().string(containsString("10")))
 
         .andExpect(content().string(containsString("Update BidList")))
         .andExpect(content().string(containsString("Cancel")));
@@ -152,55 +153,32 @@ class BidListControllerTest {
   @Test
   void givenABidListWhenPostUpdateThenTheBidListIsUpdatedAndListHomeDisplayed() throws Exception {
     //Given
-    BidList bidRecorded=new BidList();
-    bidRecorded.setBidListId(1);
-    bidRecorded.setAccount("Account_Test");
-    bidRecorded.setType("Type_Test");
-    bidRecorded.setBidQuantity(10);
-
-    BidList bidToUpdate=new BidList();
-    bidToUpdate.setBidListId(1);
-    bidToUpdate.setAccount("Account_updated");
-    bidToUpdate.setType("Type_updated");
-    bidToUpdate.setBidQuantity(120);
-
-    when(service.getBidListById(anyInt())).thenReturn(Optional.of(bidRecorded));
-    when(service.update(any())).thenReturn(bidToUpdate);
-    when(service.getAll()).thenReturn(List.of(bidToUpdate));
+    when(service.update(anyInt(),any())).thenReturn(bid);
+    when(service.getAll()).thenReturn(List.of(bid));
 
     //When
     mockMvc.perform(post("/bidList/update/1")
-            .param("account","account_updated")
-            .param("type","Type_updated")
-            .param("bidQuantity", String.valueOf(120)))
+            .param("account","Account Test")
+            .param("type","Type Test")
+            .param("bidQuantity","10"))
         .andExpect(view().name("/bidList/list"))
         .andExpect(status().isCreated())
 
         .andExpect(content().string(containsString("1")))
-        .andExpect(content().string(containsString("Account_updated")))
-        .andExpect(content().string(containsString("Type_updated")))
-        .andExpect(content().string(containsString("120")));
+        .andExpect(content().string(containsString("Account Test")))
+        .andExpect(content().string(containsString("Type Test")))
+        .andExpect(content().string(containsString("10")));
   }
 
   @Test
   void givenABidListNotValidWhenPostUpdateThenTheUpdateFormIsDisplayedWithErrorMessage() throws Exception {
     //Given
-    BidList bid= new BidList("Account Test", "Type Test", 10d);
-    bid.setBidListId(1);
-
-    when(service.getBidListById(anyInt())).thenReturn(Optional.of(bid));
+   when(service.getById(anyInt())).thenReturn(bid);
 
     //When
-    mockMvc.perform(post("/bidList/update/1")
-            .param("account","")
-            .param("type","")
-            .param("bidQuantity", String.valueOf(0)))
-        .andExpect(view().name("/bidList/update"))
-        .andExpect(status().isOk())
-
-        .andExpect(content().string(containsString("Account is mandatory")))
-        .andExpect(content().string(containsString("Type is mandatory")))
-        .andExpect(content().string(containsString("Enter only numbers")));
+    mockMvc.perform(post("/bidList/update/1"))
+        .andExpect(view().name("redirect:1"))
+        .andExpect(status().is3xxRedirection());
   }
 
   @Test

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BidListServiceImpl implements BidListService {
@@ -29,13 +28,14 @@ public class BidListServiceImpl implements BidListService {
 
   @Override
   @Transactional
-  public Optional<BidList> getBidListById(Integer id) {
-    return repository.findById(id);
+  public BidList getById(Integer id) {
+    return repository.getById(id);
   }
 
   @Override
   @Transactional
-  public BidList update(BidList bidToUpdate) {
+  public BidList update(Integer id, BidList bidToUpdate) {
+    bidToUpdate.setBidListId(id);
     return repository.save(bidToUpdate);
   }
 

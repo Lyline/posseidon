@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class BidListController {
@@ -33,86 +32,75 @@ public class BidListController {
 
     @RequestMapping("/bidList/list")
     public String home(Model model, HttpServletResponse response){
-        List<BidListDTO>bidsDTO=new ArrayList<>();
-        List<BidList>bids=service.getAll();
+      List<BidList>bids=service.getAll();
 
-        for (BidList bid:bids) {
-            BidListDTO bidDTO=mapper.map(bid,BidListDTO.class);
-            bidsDTO.add(bidDTO);
-        }
+      List<BidListDTO>bidsDTO=bids.stream()
+              .map(bid->mapper.map(bid,BidListDTO.class))
+              .collect(Collectors.toList());
 
-      logger.info("Get - all bid list : "+bids.size()+" bid(s)");
+      logger.info("Read - all bid list : "+bids.size()+" bid(s)");
       model.addAttribute("bids",bidsDTO);
-      return "bidList/list";
+      return "/bidList/list";
     }
 
     @GetMapping("/bidList/add")
     public String addBidForm(BidList bid,Model model) {
       model.addAttribute("bidList",bid);
-      return "bidList/add";
+      return "/bidList/add";
     }
 
     @PostMapping("/bidList/validate")
     public String validate(@Valid BidList bid, BindingResult result,
-                           HttpServletResponse response, Model model) {
-
+                           Model model, HttpServletResponse response) {
       if (result.hasErrors()){
-        return "bidList/add";
-      }
-
-      List<BidListDTO>bidsDTO= new ArrayList<>();
+        return "/bidList/add";
+      }else response.setStatus(HttpServletResponse.SC_CREATED);
 
       service.create(bid);
-      response.setStatus(HttpServletResponse.SC_CREATED);
 
       List<BidList>bids=service.getAll();
 
-      for (BidList bidToDTO:bids) {
-        BidListDTO bidMapDTO=mapper.map(bidToDTO,BidListDTO.class);
-        bidsDTO.add(bidMapDTO);
-      }
-      logger.info("Post - bid list : Account ="+bid.getAccount()+", Type ="
+      List<BidListDTO>bidsDTO=bids.stream()
+          .map(bidDto->mapper.map(bidDto,BidListDTO.class))
+          .collect(Collectors.toList());
+
+      logger.info("Create - bid list : Account ="+bid.getAccount()+", Type ="
           +bid.getType()+", Bid quantity ="+bid.getBidQuantity()+" is saved");
       model.addAttribute("bids",bidsDTO);
-      return "bidList/list";
+      return "/bidList/list";
     }
 
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-      Optional<BidList> bidList=service.getBidListById(id);
+      BidList bid= service.getById(id);
 
-      model.addAttribute("bidList", bidList.get());
-        return "bidList/update";
+      logger.info("Read - bid list : Account ="+bid.getAccount()+", Type ="
+          +bid.getType()+", Bid quantity ="+bid.getBidQuantity());
+      model.addAttribute("bidList", bid);
+        return "/bidList/update";
     }
 
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
                              BindingResult result, Model model, HttpServletResponse response) {
       if (result.hasErrors()){
-        return "/bidList/update";
+        return "redirect:"+id;
       }else response.setStatus(HttpServletResponse.SC_CREATED);
 
-      BidList bidListToUpdate= new BidList();
-      bidListToUpdate.setBidListId(id);
-      bidListToUpdate.setAccount(bidList.getAccount());
-      bidListToUpdate.setType(bidList.getType());
-      bidListToUpdate.setBidQuantity(bidList.getBidQuantity());
+      service.update(id,bidList);
 
-      BidList bidListUpdated=service.update(bidListToUpdate);
-
-      logger.info("Update - Bid list id ="+id+", Account ="+bidListToUpdate.getAccount()
-          +", Type ="+bidListToUpdate.getType()+", Bid quantity ="
-          +bidListToUpdate.getBidQuantity()+" is updated");
-
-      model.addAttribute("bidList",bidListUpdated);
+      logger.info("Update - bid list : Account ="+bidList.getAccount()
+          +", Type ="+bidList.getType()+", Bid quantity ="
+          +bidList.getBidQuantity()+" is saved");
       model.addAttribute("bids",service.getAll());
       return "/bidList/list";
     }
 
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        service.delete(id);
+      service.delete(id);
 
+      logger.info("Delete - bid list with id "+id+" is deleted");
       model.addAttribute("bids",service.getAll());
         return "/bidList/list";
     }

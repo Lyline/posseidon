@@ -2,6 +2,7 @@ package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,12 +17,30 @@ public class BidListServiceTest {
 
   private BidListService classUnderTest= new BidListServiceImpl(repository);
 
+  private final BidList bid= new BidList();
+  private final BidList bid1= new BidList();
+  private final BidList bidToSave= new BidList();
+
+  @BeforeEach
+  void setUp() {
+    bid.setBidListId(1);
+    bid.setAccount("Account Test");
+    bid.setType("Type Test");
+    bid.setBidQuantity(10);
+
+    bid1.setBidListId(2);
+    bid1.setAccount("Account_Test1");
+    bid1.setType("Type_Test1");
+    bid1.setBidQuantity(20);
+
+    bidToSave.setAccount("Account Test");
+    bidToSave.setType("Type Test");
+    bidToSave.setBidQuantity(10);
+  }
+
   @Test
   void givenTwoBidListWhenGetAllThenReturnTwoResults() {
     //Given
-    BidList bid= new BidList("Account Test", "Type Test", 10d);
-    BidList bid1= new BidList("Account Test 1", "Type Test", 20d);
-
     when(repository.findAll()).thenReturn(List.of(bid,bid1));
 
     //When
@@ -35,10 +54,6 @@ public class BidListServiceTest {
   @Test
   void givenANewBidListWhenCreateThenTheBidListIsSaved() {
     //Given
-    BidList bidToSave= new BidList("Account Test", "Type Test", 10d);
-    BidList bid= new BidList("Account Test", "Type Test", 10d);
-    bid.setBidListId(1);
-
     when(repository.save(any())).thenReturn(bid);
 
     //When
@@ -50,20 +65,29 @@ public class BidListServiceTest {
   }
 
   @Test
-  void givenABidListWhenUpdateThenTheBidListIsUpdated() {
+  void givenAExistingCurvePointWhenGetByIdThenCurveIsFounded() {
     //Given
-    BidList bidToUpdate= new BidList("Account Test", "Type Test", 10d);
-    BidList bid= new BidList("Account Test", "Type Test", 10d);
-    bid.setBidListId(1);
-
-    when(repository.save(any())).thenReturn(bid);
+    when(repository.getById(anyInt())).thenReturn(bid);
 
     //When
-    BidList actual=classUnderTest.update(bidToUpdate);
+    BidList actual= classUnderTest.getById(1);
 
     //Then
     assertSame(actual,bid);
-    verify(repository, times(1)).save(bidToUpdate);
+    verify(repository,times(1)).getById(1);
+  }
+
+  @Test
+  void givenABidListWhenUpdateThenTheBidListIsUpdated() {
+    //Given
+    when(repository.save(any())).thenReturn(bid);
+
+    //When
+    BidList actual=classUnderTest.update(1,bidToSave);
+
+    //Then
+    assertSame(actual,bid);
+    verify(repository, times(1)).save(bidToSave);
   }
 
   @Test
