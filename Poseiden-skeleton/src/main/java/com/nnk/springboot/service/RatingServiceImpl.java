@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RatingServiceImpl implements RatingService{
@@ -32,6 +33,11 @@ public class RatingServiceImpl implements RatingService{
   @Transactional
   public Rating getById(Integer id) {
     return repository.getById(id);
+  }
+
+  @Override
+  public Optional<Rating> findById(Integer id) {
+    return repository.findById(id);
   }
 
   @Override

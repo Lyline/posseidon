@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -47,4 +48,24 @@ public class RatingApiController {
     return new ResponseEntity<>(ratingSave,HttpStatus.CREATED);
   }
 
+  @PutMapping("/ratings/{id}")
+  public ResponseEntity<Rating>updateRating(@PathVariable(value = "id") Integer id,
+                                                 @RequestBody Rating rating){
+    Optional<Rating> ratingIsExist=service.findById(id);
+    if (ratingIsExist.isEmpty()){
+      logger.info("Read - rating with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    if (rating.getMoodysRating().isBlank() | rating.getSandPRating().isBlank() |
+        rating.getFitchRating().isBlank() | rating.getOrderNumber()==null){
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    Rating curveUpdate=service.update(id,rating);
+    logger.info("Update - rating : Moody's rating ="+ rating.getMoodysRating()+"," +
+        " Sand P Rating ="+ rating.getSandPRating()+", Fitch rating ="+ rating.getFitchRating()+
+        "Order number ="+ rating.getOrderNumber()+" is saved");
+    return new ResponseEntity<>(curveUpdate,HttpStatus.CREATED);
+  }
 }
