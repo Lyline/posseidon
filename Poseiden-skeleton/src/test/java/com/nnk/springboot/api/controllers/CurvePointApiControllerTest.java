@@ -1,0 +1,80 @@
+package com.nnk.springboot.api.controllers;
+
+import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.service.CurvePointServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(CurvePointApiController.class)
+class CurvePointApiControllerTest {
+
+  @Autowired
+  private MockMvc mockMvc;
+
+  @MockBean
+  private CurvePointServiceImpl service;
+
+  private final CurvePoint curve= new CurvePoint();
+  private final CurvePoint curve1= new CurvePoint();
+
+  @BeforeEach
+  void setUp() {
+    curve.setId(1);
+    curve.setCurveId(10);
+    curve.setTerm(12);
+    curve.setValue(3);
+
+    curve1.setId(2);
+    curve1.setCurveId(20);
+    curve1.setTerm(14);
+    curve1.setValue(4);
+  }
+
+  @Test
+  void givenTwoBidListSavedWhenGetAllThenBidListWithTwoResultsAndStatus200() throws Exception {
+    //Given
+    when(service.getAll()).thenReturn(List.of(curve,curve1));
+
+    //When
+    mockMvc.perform(get("/api/curvePoints")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(2)))
+
+        .andExpect(jsonPath("$[0].id",is(1)))
+        .andExpect(jsonPath("$[0].curveId",is(10)))
+        .andExpect(jsonPath("$[0].term",is(12.0)))
+        .andExpect(jsonPath("$[0].value",is(3.0)))
+
+        .andExpect(jsonPath("$[1].id",is(2)))
+        .andExpect(jsonPath("$[1].curveId",is(20)))
+        .andExpect(jsonPath("$[1].term",is(14.0)))
+        .andExpect(jsonPath("$[1].value",is(4.0)));
+  }
+
+  @Test
+  void givenNoBidListSavedWhenGetAllThenBidListWithNoResultsAndStatus204() throws Exception {
+    //Given
+    when(service.getAll()).thenReturn(List.of());
+
+    //When
+    mockMvc.perform(get("/api/curvePoints")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNoContent())
+        .andExpect(jsonPath("$", hasSize(0)));
+  }
+}

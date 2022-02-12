@@ -3,6 +3,7 @@ package com.nnk.springboot.domain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -26,6 +27,7 @@ public class CurvePoint {
   private Integer curveId;
 
   @Column(columnDefinition = "TIMESTAMP")
+  @CreationTimestamp
   private LocalDateTime asOfDate;
 
   @Column(columnDefinition = "DOUBLE")
