@@ -3,6 +3,8 @@ package com.nnk.springboot.domain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
@@ -47,6 +49,7 @@ public class BidList {
   private String benchmark;
 
   @Column(columnDefinition = "TIMESTAMP")
+  @CreationTimestamp
   private LocalDateTime bidListDate;
 
   @Column(columnDefinition = "VARCHAR(125)")
@@ -74,6 +77,7 @@ public class BidList {
   private String revisionName;
 
   @Column(columnDefinition = "VARCHAR(125)")
+  @UpdateTimestamp
   private LocalDateTime revisionDate;
 
   @Column(columnDefinition = "VARCHAR(125)")

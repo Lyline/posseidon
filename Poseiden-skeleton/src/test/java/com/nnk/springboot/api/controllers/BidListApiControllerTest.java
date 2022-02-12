@@ -11,11 +11,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,12 +36,12 @@ class BidListApiControllerTest {
 
   @BeforeEach
   void setUp() {
-    bid.setBidListId(1);
+    bid.setId(1);
     bid.setAccount("Account Test");
     bid.setType("Type Test");
     bid.setBidQuantity(10);
 
-    bid1.setBidListId(2);
+    bid1.setId(2);
     bid1.setAccount("Account_Test1");
     bid1.setType("Type_Test1");
     bid1.setBidQuantity(20);
@@ -50,7 +53,7 @@ class BidListApiControllerTest {
     when(service.getAll()).thenReturn(List.of(bid,bid1));
 
     //When
-    mockMvc.perform(get("/api/bidList")
+    mockMvc.perform(get("/api/bids")
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$", hasSize(2)))
@@ -72,9 +75,45 @@ class BidListApiControllerTest {
     when(service.getAll()).thenReturn(List.of());
 
     //When
-    mockMvc.perform(get("/api/bidList")
+    mockMvc.perform(get("/api/bids")
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent())
         .andExpect(jsonPath("$", hasSize(0)));
+  }
+
+  @Test
+  void givenANewValidBidWhenCreateThenBidIsSavedAndStatus201() throws Exception {
+    //Given
+    when(service.create(any())).thenReturn(bid);
+
+    //When
+    mockMvc.perform(post("/api/bids")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("{" +
+            "\"account\":\"Account Test\","+
+            "\"type\":\"Type Test\","+
+            "\"bidQuantity\":10.0" +
+            "}"))
+
+        .andExpect(status().isCreated())
+
+        .andExpect(jsonPath("$.id",is(1)))
+        .andExpect(jsonPath("$.account",is("Account Test")))
+        .andExpect(jsonPath("$.type",is("Type Test")))
+        .andExpect(jsonPath("$.bidQuantity",is(10.0)));
+  }
+
+  @Test
+  void givenANewNotValidBidWhenCreateThenBidIsNotSavedAndStatus400() throws Exception {
+    //Given
+    //When
+    mockMvc.perform(post("/api/bids")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"account\":\"\","+
+                "\"type\":\"\","+
+                "\"bidQuantity\":" +
+                "}"))
+        .andExpect(status().isBadRequest());
   }
 }
