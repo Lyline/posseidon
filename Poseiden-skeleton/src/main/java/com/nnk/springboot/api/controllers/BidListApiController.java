@@ -65,4 +65,17 @@ public class BidListApiController {
         +bid.getBidQuantity()+" is saved");
     return new ResponseEntity<>(bidUpdate,HttpStatus.CREATED);
   }
+
+  @DeleteMapping("/bids/{id}")
+  public ResponseEntity<BidList>deleteBidList(@PathVariable(value = "id") Integer id){
+    Optional<BidList>bidIsExist=service.findById(id);
+    if (bidIsExist.isEmpty()){
+      logger.info("Read - Bid list with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    service.delete(id);
+    logger.info("Delete - bid list with id "+id+" is deleted");
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

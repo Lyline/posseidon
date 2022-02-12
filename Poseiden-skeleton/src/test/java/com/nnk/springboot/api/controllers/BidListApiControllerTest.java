@@ -168,4 +168,24 @@ class BidListApiControllerTest {
                 "}"))
         .andExpect(status().isNotFound());
   }
+
+  @Test
+  void givenAExistBidWhenDeleteThenBidIsDeletedAndStatus200() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(bid));
+    //When
+    mockMvc.perform(delete("/api/bids/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void givenANotExistBidWhenDeleteThenBidIsNotFoundAndStatus404() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.empty());
+    //When
+    mockMvc.perform(delete("/api/bids/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
 }
