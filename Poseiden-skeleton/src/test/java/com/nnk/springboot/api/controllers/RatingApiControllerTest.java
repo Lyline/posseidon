@@ -14,8 +14,10 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,7 +49,7 @@ class RatingApiControllerTest {
   }
 
   @Test
-  void givenTwoCurvesSavedWhenGetAllThenCurvesWithTwoResultsAndStatus200() throws Exception {
+  void givenTwoRatingsSavedWhenGetAllThenRatingsListWithTwoResultsAndStatus200() throws Exception {
     //Given
     when(service.getAll()).thenReturn(List.of(rating,rating1));
 
@@ -71,7 +73,7 @@ class RatingApiControllerTest {
   }
 
   @Test
-  void givenNoCurveSavedWhenGetAllThenBidListWithNoResultsAndStatus204() throws Exception {
+  void givenNoRatingSavedWhenGetAllThenRatingsListWithNoResultsAndStatus204() throws Exception {
     //Given
     when(service.getAll()).thenReturn(List.of());
 
@@ -80,5 +82,44 @@ class RatingApiControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent())
         .andExpect(jsonPath("$", hasSize(0)));
+  }
+
+  @Test
+  void givenANewValidRatingWhenCreateThenRatingIsSavedAndStatus201() throws Exception {
+    //Given
+    when(service.create(any())).thenReturn(rating);
+
+    //When
+    mockMvc.perform(post("/api/ratings")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"moodysRating\":\"mood_test\","+
+                "\"sandPRating\":\"sand_test\","+
+                "\"fitchRating\":\"fitch_test\"," +
+                "\"orderNumber\":3" +
+                "}"))
+
+        .andExpect(status().isCreated())
+
+        .andExpect(jsonPath("$.id",is(1)))
+        .andExpect(jsonPath("$.moodysRating",is("mood_test")))
+        .andExpect(jsonPath("$.sandPRating",is("sand_test")))
+        .andExpect(jsonPath("$.fitchRating",is("fitch_test")))
+        .andExpect(jsonPath("$.orderNumber",is(3)));
+  }
+
+  @Test
+  void givenANewNotValidRatingWhenCreateThenRatingIsNotSavedAndStatus400() throws Exception {
+    //Given
+    //When
+    mockMvc.perform(post("/api/ratings")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"moodysRating\":\"\","+
+                "\"sandPRating\":\"\","+
+                "\"fitchRating\":\"\"," +
+                "\"orderNumber\":" +
+                "}"))
+        .andExpect(status().isBadRequest());
   }
 }
