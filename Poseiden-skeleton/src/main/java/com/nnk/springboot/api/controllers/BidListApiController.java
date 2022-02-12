@@ -45,4 +45,24 @@ public class BidListApiController {
         +bid.getType()+", Bid quantity ="+bid.getBidQuantity()+" is saved");
     return new ResponseEntity<>(bidSave,HttpStatus.CREATED);
   }
+
+  @PutMapping("/bids/{id}")
+  public ResponseEntity<BidList>updateBidList(@PathVariable(value = "id") Integer id,
+                                              @RequestBody BidList bid){
+    Optional<BidList>bidIsExist=service.findById(id);
+    if (bidIsExist.isEmpty()){
+      logger.info("Read - Bid list with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    if (bid.getAccount().isBlank() | bid.getType().isBlank() | bid.getBidQuantity()==0){
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    BidList bidUpdate=service.update(id,bid);
+    logger.info("Update - bid list : Account ="+bid.getAccount()
+        +", Type ="+bid.getType()+", Bid quantity ="
+        +bid.getBidQuantity()+" is saved");
+    return new ResponseEntity<>(bidUpdate,HttpStatus.CREATED);
+  }
 }

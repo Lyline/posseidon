@@ -116,4 +116,56 @@ class BidListApiControllerTest {
                 "}"))
         .andExpect(status().isBadRequest());
   }
+
+  @Test
+  void givenAExistingBidWhenUpdateThenBidIsSavedAndStatus201() throws Exception {
+    //Given
+    when(service.update(anyInt(),any())).thenReturn(bid);
+
+    //When
+    mockMvc.perform(put("/api/bids/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"account\":\"Account Test\","+
+                "\"type\":\"Type Test\","+
+                "\"bidQuantity\":10.0" +
+                "}"))
+
+        .andExpect(status().isCreated())
+
+        .andExpect(jsonPath("$.id",is(1)))
+        .andExpect(jsonPath("$.account",is("Account Test")))
+        .andExpect(jsonPath("$.type",is("Type Test")))
+        .andExpect(jsonPath("$.bidQuantity",is(10.0)));
+  }
+
+  @Test
+  void givenANotValidBidWhenUpdateThenBidIsNotSavedAndStatus400() throws Exception {
+    //Given
+    //When
+    mockMvc.perform(put("/api/bids/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"account\":\"\","+
+                "\"type\":\"\","+
+                "\"bidQuantity\":" +
+                "}"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void givenANotExistBidWhenUpdateThenBidIsNotFoundAndStatus404() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.empty());
+
+    //When
+    mockMvc.perform(put("/api/bids/5")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"account\":\"test\","+
+                "\"type\":\"test\","+
+                "\"bidQuantity\":10.1" +
+                "}"))
+        .andExpect(status().isNotFound());
+  }
 }

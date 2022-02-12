@@ -6,9 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -98,5 +100,27 @@ public class BidListServiceTest {
 
     //Then
     verify(repository,times(1)).deleteById(1);
+  }
+
+  @Test
+  void givenAExistBidListWhenFindByIdThenBidListIsFound() {
+    //Given
+    when(repository.findById(anyInt())).thenReturn(Optional.of(bid));
+    //When
+    Optional<BidList>actual= classUnderTest.findById(1);
+
+    //Then
+    assertSame(actual.get(),bid);
+  }
+
+  @Test
+  void givenANotExistBidListWhenFindByIdThenBidListIsEmpty() {
+    //Given
+    when(repository.findById(anyInt())).thenReturn(Optional.empty());
+    //When
+    Optional<BidList>actual= classUnderTest.findById(1);
+
+    //Then
+    assertTrue(actual.isEmpty());
   }
 }
