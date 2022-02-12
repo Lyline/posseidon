@@ -182,7 +182,7 @@ class RatingApiControllerTest {
   }
 
   @Test
-  void givenAExistCurveWhenDeleteThenCurveIsDeletedAndStatus200() throws Exception {
+  void givenAExistRatingWhenDeleteThenRatingIsDeletedAndStatus200() throws Exception {
     //Given
     when(service.findById(anyInt())).thenReturn(Optional.of(rating));
     //When
@@ -192,7 +192,7 @@ class RatingApiControllerTest {
   }
 
   @Test
-  void givenANotExistCurveWhenDeleteThenCurveIsNotFoundAndStatus404() throws Exception {
+  void givenANotExistRatingWhenDeleteThenRatingIsNotFoundAndStatus404() throws Exception {
     //Given
     when(service.findById(anyInt())).thenReturn(Optional.empty());
     //When

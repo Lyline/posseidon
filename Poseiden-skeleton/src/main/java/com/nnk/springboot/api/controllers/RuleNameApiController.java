@@ -68,4 +68,17 @@ public class RuleNameApiController {
         + ruleName.getDescription()+" is saved");
     return new ResponseEntity<>(curveUpdate,HttpStatus.CREATED);
   }
+
+  @DeleteMapping("/ruleNames/{id}")
+  public ResponseEntity<RuleName>deleteRuleName(@PathVariable(value = "id") Integer id){
+    Optional<RuleName>ruleNameIsExist=service.findById(id);
+    if (ruleNameIsExist.isEmpty()){
+      logger.info("Read - rule name with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    service.delete(id);
+    logger.info("Delete - rule name with id "+id+" is deleted");
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

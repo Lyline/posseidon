@@ -48,7 +48,7 @@ public class CurvePointApiController {
   }
 
   @PutMapping("/curvePoints/{id}")
-  public ResponseEntity<CurvePoint>updateBidList(@PathVariable(value = "id") Integer id,
+  public ResponseEntity<CurvePoint>updateCurvePoint(@PathVariable(value = "id") Integer id,
                                               @RequestBody CurvePoint curve){
     Optional<CurvePoint> curveIsExist=service.findById(id);
     if (curveIsExist.isEmpty()){
@@ -67,7 +67,7 @@ public class CurvePointApiController {
   }
 
   @DeleteMapping("/curvePoints/{id}")
-  public ResponseEntity<BidList>deleteBidList(@PathVariable(value = "id") Integer id){
+  public ResponseEntity<BidList>deleteCurvePoint(@PathVariable(value = "id") Integer id){
     Optional<CurvePoint>curveIsExist=service.findById(id);
     if (curveIsExist.isEmpty()){
       logger.info("Read - curve list with id "+id+" is not exist");
