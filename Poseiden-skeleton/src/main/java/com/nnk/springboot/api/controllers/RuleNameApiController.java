@@ -6,9 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,5 +31,19 @@ public class RuleNameApiController {
       logger.info("Read - All rule name : "+ruleNames.size()+" rule name(s)");
       return new ResponseEntity<>(ruleNames, HttpStatus.OK);
     }
+  }
+
+  @PostMapping("/ruleNames")
+  public ResponseEntity<RuleName>addRuleName(@RequestBody RuleName ruleName){
+    if (ruleName.getName().isBlank() | ruleName.getDescription().isBlank() |
+        ruleName.getJson().isBlank() | ruleName.getTemplate().isBlank() |
+        ruleName.getSqlStr().isBlank() | ruleName.getSqlPart().isBlank()){
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    RuleName ruleNameSave=service.create(ruleName);
+    logger.info("Create - rule name : Name ="+ruleName.getName()+", Description ="
+        + ruleName.getDescription()+" is saved");
+    return new ResponseEntity<>(ruleNameSave,HttpStatus.CREATED);
   }
 }

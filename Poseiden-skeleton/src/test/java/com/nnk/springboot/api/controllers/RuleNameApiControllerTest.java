@@ -14,8 +14,10 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -88,5 +90,50 @@ class RuleNameApiControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent())
         .andExpect(jsonPath("$", hasSize(0)));
+  }
+
+  @Test
+  void givenANewValidRuleNameWhenCreateThenRuleNameIsSavedAndStatus201() throws Exception {
+    //Given
+    when(service.create(any())).thenReturn(ruleName);
+
+    //When
+    mockMvc.perform(post("/api/ruleNames")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"name\":\"Name_test\","+
+                "\"description\":\"Description_test\","+
+                "\"json\":\"Json_test\"," +
+                "\"template\":\"Template_test\"," +
+                "\"sqlStr\":\"Sql_String_test\"," +
+                "\"sqlPart\":\"Sql_Part_test\"" +
+                "}"))
+
+        .andExpect(status().isCreated())
+
+        .andExpect(jsonPath("$.id",is(1)))
+        .andExpect(jsonPath("$.name",is("Name_test")))
+        .andExpect(jsonPath("$.description",is("Description_test")))
+        .andExpect(jsonPath("$.json",is("Json_test")))
+        .andExpect(jsonPath("$.template",is("Template_test")))
+        .andExpect(jsonPath("$.sqlStr",is("Sql_String_test")))
+        .andExpect(jsonPath("$.sqlPart",is("Sql_Part_test")));
+  }
+
+  @Test
+  void givenANewNotValidRuleNameWhenCreateThenRuleNameIsNotSavedAndStatus400() throws Exception {
+    //Given
+    //When
+    mockMvc.perform(post("/api/ruleNames")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"name\":\"\","+
+                "\"description\":\"\","+
+                "\"json\":\"\"," +
+                "\"template\":\"\"," +
+                "\"sqlStr\":\"\"," +
+                "\"sqlPart\":\"\"" +
+                "}"))
+        .andExpect(status().isBadRequest());
   }
 }
