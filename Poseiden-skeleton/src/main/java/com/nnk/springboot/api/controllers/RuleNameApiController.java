@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -45,5 +46,26 @@ public class RuleNameApiController {
     logger.info("Create - rule name : Name ="+ruleName.getName()+", Description ="
         + ruleName.getDescription()+" is saved");
     return new ResponseEntity<>(ruleNameSave,HttpStatus.CREATED);
+  }
+
+  @PutMapping("/ruleNames/{id}")
+  public ResponseEntity<RuleName>updateRuleName(@PathVariable(value = "id") Integer id,
+                                                 @RequestBody RuleName ruleName){
+    Optional<RuleName> ruleNameIsExist=service.findById(id);
+    if (ruleNameIsExist.isEmpty()){
+      logger.info("Read - rule name with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    if (ruleName.getName().isBlank() | ruleName.getDescription().isBlank() |
+        ruleName.getJson().isBlank() | ruleName.getTemplate().isBlank() |
+        ruleName.getSqlStr().isBlank() | ruleName.getSqlPart().isBlank()){
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    RuleName curveUpdate=service.update(id,ruleName);
+    logger.info("Update - rule name : Name ="+ruleName.getName()+", Description ="
+        + ruleName.getDescription()+" is saved");
+    return new ResponseEntity<>(curveUpdate,HttpStatus.CREATED);
   }
 }

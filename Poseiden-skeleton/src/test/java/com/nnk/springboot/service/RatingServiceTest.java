@@ -103,7 +103,7 @@ class RatingServiceTest {
   }
 
   @Test
-  void givenAExistBidListWhenFindByIdThenBidListIsFound() {
+  void givenAExistRatingWhenFindByIdThenRatingIsFound() {
     //Given
     when(repository.findById(anyInt())).thenReturn(Optional.of(rating));
     //When
@@ -114,7 +114,7 @@ class RatingServiceTest {
   }
 
   @Test
-  void givenANotExistBidListWhenFindByIdThenBidListIsEmpty() {
+  void givenANotExistRatingWhenFindByIdThenRatingIsEmpty() {
     //Given
     when(repository.findById(anyInt())).thenReturn(Optional.empty());
     //When

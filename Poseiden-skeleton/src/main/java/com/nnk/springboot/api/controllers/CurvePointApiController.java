@@ -50,8 +50,8 @@ public class CurvePointApiController {
   @PutMapping("/curvePoints/{id}")
   public ResponseEntity<CurvePoint>updateBidList(@PathVariable(value = "id") Integer id,
                                               @RequestBody CurvePoint curve){
-    Optional<CurvePoint> bidIsExist=service.findById(id);
-    if (bidIsExist.isEmpty()){
+    Optional<CurvePoint> curveIsExist=service.findById(id);
+    if (curveIsExist.isEmpty()){
       logger.info("Read - curve point with id "+id+" is not exist");
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -61,7 +61,7 @@ public class CurvePointApiController {
     }
 
     CurvePoint curveUpdate=service.update(id,curve);
-    logger.info("Create - curve point : Curve id ="+curve.getCurveId()+", Term ="
+    logger.info("Update - curve point : Curve id ="+curve.getCurveId()+", Term ="
         + curve.getTerm()+", Value ="+ curve.getValue()+" is saved");
     return new ResponseEntity<>(curveUpdate,HttpStatus.CREATED);
   }
