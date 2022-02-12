@@ -180,4 +180,24 @@ class RatingApiControllerTest {
                 "}"))
         .andExpect(status().isNotFound());
   }
+
+  @Test
+  void givenAExistCurveWhenDeleteThenCurveIsDeletedAndStatus200() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(rating));
+    //When
+    mockMvc.perform(delete("/api/ratings/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void givenANotExistCurveWhenDeleteThenCurveIsNotFoundAndStatus404() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.empty());
+    //When
+    mockMvc.perform(delete("/api/ratings/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
 }

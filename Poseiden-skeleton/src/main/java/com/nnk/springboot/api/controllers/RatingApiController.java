@@ -68,4 +68,17 @@ public class RatingApiController {
         "Order number ="+ rating.getOrderNumber()+" is saved");
     return new ResponseEntity<>(curveUpdate,HttpStatus.CREATED);
   }
+
+  @DeleteMapping("/ratings/{id}")
+  public ResponseEntity<Rating>deleteBidList(@PathVariable(value = "id") Integer id){
+    Optional<Rating>ratingIsExist=service.findById(id);
+    if (ratingIsExist.isEmpty()){
+      logger.info("Read - rating with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    service.delete(id);
+    logger.info("Delete - rating with id "+id+" is deleted");
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }
