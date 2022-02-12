@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -43,5 +44,24 @@ public class CurvePointApiController {
     logger.info("Create - curve point : Curve id ="+curve.getCurveId()+", Term ="
         + curve.getTerm()+", Value ="+ curve.getValue()+" is saved");
     return new ResponseEntity<>(curveSave,HttpStatus.CREATED);
+  }
+
+  @PutMapping("/curvePoints/{id}")
+  public ResponseEntity<CurvePoint>updateBidList(@PathVariable(value = "id") Integer id,
+                                              @RequestBody CurvePoint curve){
+    Optional<CurvePoint> bidIsExist=service.findById(id);
+    if (bidIsExist.isEmpty()){
+      logger.info("Read - curve point with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    if (curve.getCurveId()==null | curve.getTerm()==0 | curve.getValue()==0){
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    CurvePoint curveUpdate=service.update(id,curve);
+    logger.info("Create - curve point : Curve id ="+curve.getCurveId()+", Term ="
+        + curve.getTerm()+", Value ="+ curve.getValue()+" is saved");
+    return new ResponseEntity<>(curveUpdate,HttpStatus.CREATED);
   }
 }

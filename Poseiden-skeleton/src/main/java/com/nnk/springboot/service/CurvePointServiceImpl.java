@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CurvePointServiceImpl implements CurvePointService {
@@ -31,6 +32,11 @@ public class CurvePointServiceImpl implements CurvePointService {
   @Transactional
   public CurvePoint getById(Integer id) {
     return repository.getById(id);
+  }
+
+  @Override
+  public Optional<CurvePoint> findById(Integer id) {
+    return repository.findById(id);
   }
 
   @Override

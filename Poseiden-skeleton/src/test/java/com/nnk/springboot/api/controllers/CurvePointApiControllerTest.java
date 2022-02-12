@@ -11,13 +11,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -115,4 +116,59 @@ class CurvePointApiControllerTest {
                 "}"))
         .andExpect(status().isBadRequest());
   }
+
+  @Test
+  void givenAExistingBidWhenUpdateThenBidIsSavedAndStatus201() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(curve));
+    when(service.update(anyInt(),any())).thenReturn(curve);
+
+    //When
+    mockMvc.perform(put("/api/curvePoints/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"curveId\":10,"+
+                "\"term\":12.0,"+
+                "\"value\":3.0" +
+                "}"))
+
+        .andExpect(status().isCreated())
+
+        .andExpect(jsonPath("$.id",is(1)))
+        .andExpect(jsonPath("$.curveId",is(10)))
+        .andExpect(jsonPath("$.term",is(12.0)))
+        .andExpect(jsonPath("$.value",is(3.0)));
+  }
+
+  @Test
+  void givenANotValidBidWhenUpdateThenBidIsNotSavedAndStatus400() throws Exception {
+    //Given
+    //When
+    mockMvc.perform(put("/api/curvePoints/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"curveId\":0,"+
+                "\"terme\":0,"+
+                "\"value\":" +
+                "}"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void givenANotExistBidWhenUpdateThenBidIsNotFoundAndStatus404() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.empty());
+
+    //When
+    mockMvc.perform(put("/api/curvePoints/5")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"curveId\":10,"+
+                "\"term\":12.0,"+
+                "\"value\":3.0" +
+                "}"))
+        .andExpect(status().isNotFound());
+  }
+
+
 }
