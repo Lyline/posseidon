@@ -1,5 +1,6 @@
 package com.nnk.springboot.api.controllers;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.service.CurvePointServiceImpl;
 import org.slf4j.Logger;
@@ -63,5 +64,18 @@ public class CurvePointApiController {
     logger.info("Create - curve point : Curve id ="+curve.getCurveId()+", Term ="
         + curve.getTerm()+", Value ="+ curve.getValue()+" is saved");
     return new ResponseEntity<>(curveUpdate,HttpStatus.CREATED);
+  }
+
+  @DeleteMapping("/curvePoints/{id}")
+  public ResponseEntity<BidList>deleteBidList(@PathVariable(value = "id") Integer id){
+    Optional<CurvePoint>curveIsExist=service.findById(id);
+    if (curveIsExist.isEmpty()){
+      logger.info("Read - curve list with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    service.delete(id);
+    logger.info("Delete - curve list with id "+id+" is deleted");
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

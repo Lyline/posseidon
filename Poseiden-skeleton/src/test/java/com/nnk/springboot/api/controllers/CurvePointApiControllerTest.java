@@ -48,7 +48,7 @@ class CurvePointApiControllerTest {
   }
 
   @Test
-  void givenTwoBidListSavedWhenGetAllThenBidListWithTwoResultsAndStatus200() throws Exception {
+  void givenTwoCurvesSavedWhenGetAllThenCurvesWithTwoResultsAndStatus200() throws Exception {
     //Given
     when(service.getAll()).thenReturn(List.of(curve,curve1));
 
@@ -70,7 +70,7 @@ class CurvePointApiControllerTest {
   }
 
   @Test
-  void givenNoBidListSavedWhenGetAllThenBidListWithNoResultsAndStatus204() throws Exception {
+  void givenNoCurveSavedWhenGetAllThenBidListWithNoResultsAndStatus204() throws Exception {
     //Given
     when(service.getAll()).thenReturn(List.of());
 
@@ -82,7 +82,7 @@ class CurvePointApiControllerTest {
   }
 
   @Test
-  void givenANewValidBidWhenCreateThenBidIsSavedAndStatus201() throws Exception {
+  void givenANewValidCurveWhenCreateThenCurveIsSavedAndStatus201() throws Exception {
     //Given
     when(service.create(any())).thenReturn(curve);
 
@@ -104,7 +104,7 @@ class CurvePointApiControllerTest {
   }
 
   @Test
-  void givenANewNotValidBidWhenCreateThenBidIsNotSavedAndStatus400() throws Exception {
+  void givenANewNotValidCurveWhenCreateThenCurveIsNotSavedAndStatus400() throws Exception {
     //Given
     //When
     mockMvc.perform(post("/api/curvePoints")
@@ -118,7 +118,7 @@ class CurvePointApiControllerTest {
   }
 
   @Test
-  void givenAExistingBidWhenUpdateThenBidIsSavedAndStatus201() throws Exception {
+  void givenAExistingCurveWhenUpdateThenCurveIsSavedAndStatus201() throws Exception {
     //Given
     when(service.findById(anyInt())).thenReturn(Optional.of(curve));
     when(service.update(anyInt(),any())).thenReturn(curve);
@@ -141,7 +141,7 @@ class CurvePointApiControllerTest {
   }
 
   @Test
-  void givenANotValidBidWhenUpdateThenBidIsNotSavedAndStatus400() throws Exception {
+  void givenANotValidCurveWhenUpdateThenCurveIsNotSavedAndStatus400() throws Exception {
     //Given
     //When
     mockMvc.perform(put("/api/curvePoints/1")
@@ -155,7 +155,7 @@ class CurvePointApiControllerTest {
   }
 
   @Test
-  void givenANotExistBidWhenUpdateThenBidIsNotFoundAndStatus404() throws Exception {
+  void givenANotExistCurveWhenUpdateThenCurveIsNotFoundAndStatus404() throws Exception {
     //Given
     when(service.findById(anyInt())).thenReturn(Optional.empty());
 
@@ -170,5 +170,23 @@ class CurvePointApiControllerTest {
         .andExpect(status().isNotFound());
   }
 
+  @Test
+  void givenAExistCurveWhenDeleteThenCurveIsDeletedAndStatus200() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(curve));
+    //When
+    mockMvc.perform(delete("/api/curvePoints/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+  }
 
+  @Test
+  void givenANotExistCurveWhenDeleteThenCurveIsNotFoundAndStatus404() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.empty());
+    //When
+    mockMvc.perform(delete("/api/curvePoints/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
 }
