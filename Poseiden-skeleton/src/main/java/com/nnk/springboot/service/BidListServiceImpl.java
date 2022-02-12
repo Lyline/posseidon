@@ -35,7 +35,7 @@ public class BidListServiceImpl implements BidListService {
   @Override
   @Transactional
   public BidList update(Integer id, BidList bidToUpdate) {
-    bidToUpdate.setBidListId(id);
+    bidToUpdate.setId(id);
     return repository.save(bidToUpdate);
   }
 

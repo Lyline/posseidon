@@ -19,7 +19,7 @@ public class BidList {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(columnDefinition = "TINYINT(4)")
-  private Integer bidListId;
+  private Integer id;
 
   @NotBlank(message = "Account is mandatory")
   @Column(columnDefinition = "VARCHAR(30)")

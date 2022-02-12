@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @RequiredArgsConstructor
 public class BidListDTO {
-  private Integer bidListId;
+  private Integer id;
   private String account;
   private String type;
   private double bidQuantity;

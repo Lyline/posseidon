@@ -23,12 +23,12 @@ public class BidListServiceTest {
 
   @BeforeEach
   void setUp() {
-    bid.setBidListId(1);
+    bid.setId(1);
     bid.setAccount("Account Test");
     bid.setType("Type Test");
     bid.setBidQuantity(10);
 
-    bid1.setBidListId(2);
+    bid1.setId(2);
     bid1.setAccount("Account_Test1");
     bid1.setType("Type_Test1");
     bid1.setBidQuantity(20);

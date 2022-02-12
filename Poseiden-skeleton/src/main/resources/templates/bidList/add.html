@@ -17,10 +17,9 @@
 	<div class="row">
 		<form action="#" th:action="@{/bidList/validate}" th:object="${bidList}" method="post" class="form-horizontal" style="width: 100%">
 			<div class="mb-3">
-
 				<label for="account" class="form-label">Account</label>
 				<input type="text" class="form-control" id="account" th:field="*{account}">
-				<p class="text-danger" th:if="${#fields.hasErrors('account')}" th:errors="*{account}">account error</p>
+				<p class="text-danger" th:if="${#fields.hasErrors('account')}" th:errors="*{account}"></p>
 			</div>
 			<div class="mb-3">
 				<label for="type" class="form-label">Type</label>
@@ -32,8 +31,6 @@
 				<input type="text" class="form-control" id="bidQuantity" th:field="*{bidQuantity}">
 				<p class="text-danger"  th:if="${#fields.hasErrors('bidQuantity')}" th:errors="*{bidQuantity}"></p>
 			</div>
-
-
 
 			<div>
 				<a class="btn btn-danger" th:href="@{/bidList/list}">Cancel</a>

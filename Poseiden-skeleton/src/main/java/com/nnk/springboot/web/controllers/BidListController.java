@@ -84,7 +84,7 @@ public class BidListController {
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
                              BindingResult result, Model model, HttpServletResponse response) {
       if (result.hasErrors()){
-        return "redirect:"+id;
+        return "/bidList/update";
       }else response.setStatus(HttpServletResponse.SC_CREATED);
 
       service.update(id,bidList);
@@ -93,7 +93,7 @@ public class BidListController {
           +", Type ="+bidList.getType()+", Bid quantity ="
           +bidList.getBidQuantity()+" is saved");
       model.addAttribute("bids",service.getAll());
-      return "/bidList/list";
+      return "redirect:/bidList/list";
     }
 
     @GetMapping("/bidList/delete/{id}")
