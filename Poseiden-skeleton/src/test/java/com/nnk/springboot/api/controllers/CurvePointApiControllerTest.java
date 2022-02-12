@@ -14,8 +14,10 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,5 +78,41 @@ class CurvePointApiControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent())
         .andExpect(jsonPath("$", hasSize(0)));
+  }
+
+  @Test
+  void givenANewValidBidWhenCreateThenBidIsSavedAndStatus201() throws Exception {
+    //Given
+    when(service.create(any())).thenReturn(curve);
+
+    //When
+    mockMvc.perform(post("/api/curvePoints")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"curveId\":10,"+
+                "\"term\":12.0,"+
+                "\"value\":3.0" +
+                "}"))
+
+        .andExpect(status().isCreated())
+
+        .andExpect(jsonPath("$.id",is(1)))
+        .andExpect(jsonPath("$.curveId",is(10)))
+        .andExpect(jsonPath("$.term",is(12.0)))
+        .andExpect(jsonPath("$.value",is(3.0)));
+  }
+
+  @Test
+  void givenANewNotValidBidWhenCreateThenBidIsNotSavedAndStatus400() throws Exception {
+    //Given
+    //When
+    mockMvc.perform(post("/api/curvePoints")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"curveId\":,"+
+                "\"terme\":,"+
+                "\"value\":" +
+                "}"))
+        .andExpect(status().isBadRequest());
   }
 }

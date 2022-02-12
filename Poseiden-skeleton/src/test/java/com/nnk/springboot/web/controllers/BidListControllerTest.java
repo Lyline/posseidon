@@ -161,13 +161,8 @@ class BidListControllerTest {
             .param("account","Account Test")
             .param("type","Type Test")
             .param("bidQuantity","10"))
-        .andExpect(view().name("/bidList/list"))
-        .andExpect(status().isCreated())
-
-        .andExpect(content().string(containsString("1")))
-        .andExpect(content().string(containsString("Account Test")))
-        .andExpect(content().string(containsString("Type Test")))
-        .andExpect(content().string(containsString("10")));
+        .andExpect(view().name("redirect:/bidList/list"))
+        .andExpect(status().is3xxRedirection());
   }
 
   @Test
@@ -177,8 +172,8 @@ class BidListControllerTest {
 
     //When
     mockMvc.perform(post("/bidList/update/1"))
-        .andExpect(view().name("redirect:1"))
-        .andExpect(status().is3xxRedirection());
+        .andExpect(view().name("/bidList/update"))
+        .andExpect(status().isOk());
   }
 
   @Test

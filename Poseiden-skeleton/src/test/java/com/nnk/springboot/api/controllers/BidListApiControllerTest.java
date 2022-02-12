@@ -58,12 +58,12 @@ class BidListApiControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$", hasSize(2)))
 
-        .andExpect(jsonPath("$[0].bidListId",is(1)))
+        .andExpect(jsonPath("$[0].id",is(1)))
         .andExpect(jsonPath("$[0].account",is("Account Test")))
         .andExpect(jsonPath("$[0].type",is("Type Test")))
         .andExpect(jsonPath("$[0].bidQuantity",is(10.0)))
 
-        .andExpect(jsonPath("$[1].bidListId",is(2)))
+        .andExpect(jsonPath("$[1].id",is(2)))
         .andExpect(jsonPath("$[1].account",is("Account_Test1")))
         .andExpect(jsonPath("$[1].type",is("Type_Test1")))
         .andExpect(jsonPath("$[1].bidQuantity",is(20.0)));
@@ -120,6 +120,7 @@ class BidListApiControllerTest {
   @Test
   void givenAExistingBidWhenUpdateThenBidIsSavedAndStatus201() throws Exception {
     //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(bid));
     when(service.update(anyInt(),any())).thenReturn(bid);
 
     //When
