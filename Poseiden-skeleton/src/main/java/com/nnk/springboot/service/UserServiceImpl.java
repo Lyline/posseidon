@@ -40,4 +40,10 @@ public class UserServiceImpl implements UserService{
     user.setId(id);
     return repository.save(user);
   }
+
+  @Override
+  @Transactional
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }

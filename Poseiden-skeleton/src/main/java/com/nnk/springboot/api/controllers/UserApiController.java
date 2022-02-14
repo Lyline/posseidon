@@ -60,7 +60,7 @@ public class UserApiController {
   }
 
   @PutMapping("/users/{id}")
-  public ResponseEntity<User>updateTrade(@PathVariable(value = "id") Integer id,
+  public ResponseEntity<User>updateUser(@PathVariable(value = "id") Integer id,
                                           @RequestBody User user){
     Optional<User> userIsExist=service.findById(id);
     if (userIsExist.isEmpty()){
@@ -77,5 +77,18 @@ public class UserApiController {
     logger.info("Update - user : Username ="+user.getUsername()+", Full name ="
         + user.getFullName()+", Role ="+ user.getRole()+" is saved");
     return new ResponseEntity<>(userUpdate,HttpStatus.CREATED);
+  }
+
+  @DeleteMapping("/users/{id}")
+  public ResponseEntity<User>deleteUser(@PathVariable(value = "id") Integer id){
+    Optional<User>userIsExist=service.findById(id);
+    if (userIsExist.isEmpty()){
+      logger.info("Read - user with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    service.delete(id);
+    logger.info("Delete - user with id "+id+" is deleted");
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

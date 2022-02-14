@@ -114,4 +114,12 @@ class UserServiceTest {
     assertSame(actual,user);
     verify(repository,times(1)).save(userToSave);
   }
+
+  @Test
+  void givenAExistingUserWhenDeleteThenUserIsDeleted() {
+    //When
+    classUnderTest.delete(1);
+    //Then
+    verify(repository,times(1)).deleteById(1);
+  }
 }

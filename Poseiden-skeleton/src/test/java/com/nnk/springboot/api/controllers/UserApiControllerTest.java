@@ -179,4 +179,24 @@ class UserApiControllerTest {
                 "}"))
         .andExpect(status().isNotFound());
   }
+
+  @Test
+  void givenAExistUserWhenDeleteThenUserIsDeletedAndStatus200() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(user));
+    //When
+    mockMvc.perform(delete("/api/users/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void givenANotExistUserWhenDeleteThenUserIsNotFoundAndStatus404() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.empty());
+    //When
+    mockMvc.perform(delete("/api/users/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
 }

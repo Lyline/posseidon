@@ -12,4 +12,5 @@ public interface UserService {
   User create(User user);
   Optional<User> findById(Integer id);
   User update(Integer id, User user);
+  void delete(Integer id);
 }
