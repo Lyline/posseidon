@@ -3,6 +3,7 @@ package com.nnk.springboot.domain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
@@ -42,6 +43,7 @@ public class Trade {
   private double sellPrice;
 
   @Column(columnDefinition = "TIMESTAMP")
+  @CreationTimestamp
   private LocalDateTime tradeDate;
 
   @Column(columnDefinition = "VARCHAR(125)")

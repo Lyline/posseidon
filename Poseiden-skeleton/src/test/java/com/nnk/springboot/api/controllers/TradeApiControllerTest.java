@@ -14,8 +14,10 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,5 +78,41 @@ class TradeApiControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent())
         .andExpect(jsonPath("$", hasSize(0)));
+  }
+
+  @Test
+  void givenANewValidTradeWhenCreateThenTradeIsSavedAndStatus201() throws Exception {
+    //Given
+    when(service.create(any())).thenReturn(trade);
+
+    //When
+    mockMvc.perform(post("/api/trades")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"account\":\"Account_test\","+
+                "\"type\":\"Type_test\","+
+                "\"buyQuantity\":10.0"+
+                "}"))
+
+        .andExpect(status().isCreated())
+
+        .andExpect(jsonPath("$.tradeId",is(1)))
+        .andExpect(jsonPath("$.account",is("Account_test")))
+        .andExpect(jsonPath("$.type",is("Type_test")))
+        .andExpect(jsonPath("$.buyQuantity",is(10.0)));
+  }
+
+  @Test
+  void givenANewNotValidTradeWhenCreateThenTradeIsNotSavedAndStatus400() throws Exception {
+    //Given
+    //When
+    mockMvc.perform(post("/api/trades")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"account\":\"\","+
+                "\"type\":\"\","+
+                "\"buyQuantity\":0,"+
+                "}"))
+        .andExpect(status().isBadRequest());
   }
 }
