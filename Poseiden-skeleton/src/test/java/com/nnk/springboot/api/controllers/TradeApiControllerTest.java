@@ -170,4 +170,24 @@ class TradeApiControllerTest {
                 "}"))
         .andExpect(status().isNotFound());
   }
+
+  @Test
+  void givenAExistTradeWhenDeleteThenTradeIsDeletedAndStatus200() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(trade));
+    //When
+    mockMvc.perform(delete("/api/trades/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void givenANotExistTradeWhenDeleteThenTradeIsNotFoundAndStatus404() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.empty());
+    //When
+    mockMvc.perform(delete("/api/trades/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
 }

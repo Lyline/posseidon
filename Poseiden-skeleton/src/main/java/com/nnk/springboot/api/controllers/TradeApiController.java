@@ -64,4 +64,17 @@ public class TradeApiController {
         + trade.getType()+", Buy quantity ="+ trade.getBuyQuantity()+" is saved");
     return new ResponseEntity<>(tradeUpdate,HttpStatus.CREATED);
   }
+
+  @DeleteMapping("/trades/{id}")
+  public ResponseEntity<Trade>deleteTrade(@PathVariable(value = "id") Integer id){
+    Optional<Trade>tradeIsExist=service.findById(id);
+    if (tradeIsExist.isEmpty()){
+      logger.info("Read - trade with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    service.delete(id);
+    logger.info("Delete - trade with id "+id+" is deleted");
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }
