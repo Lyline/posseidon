@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -24,6 +25,19 @@ public class UserServiceImpl implements UserService{
   @Override
   @Transactional
   public User create(User user) {
+    return repository.save(user);
+  }
+
+  @Override
+  @Transactional
+  public Optional<User> findById(Integer id) {
+    return repository.findById(id);
+  }
+
+  @Override
+  @Transactional
+  public User update(Integer id, User user) {
+    user.setId(id);
     return repository.save(user);
   }
 }

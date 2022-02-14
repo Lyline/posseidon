@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -56,5 +57,25 @@ public class UserApiController {
     logger.info("Create - user : Username ="+user.getUsername()+", Full name ="
         + user.getFullName()+", Role ="+ user.getRole()+" is saved");
     return new ResponseEntity<>(userSave,HttpStatus.CREATED);
+  }
+
+  @PutMapping("/users/{id}")
+  public ResponseEntity<User>updateTrade(@PathVariable(value = "id") Integer id,
+                                          @RequestBody User user){
+    Optional<User> userIsExist=service.findById(id);
+    if (userIsExist.isEmpty()){
+      logger.info("Read - user with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    if (user.getUsername().isBlank() | user.getPassword().isBlank() |
+        user.getFullName().isBlank() | user.getRole().isBlank()){
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    User userUpdate =service.update(id,user);
+    logger.info("Update - user : Username ="+user.getUsername()+", Full name ="
+        + user.getFullName()+", Role ="+ user.getRole()+" is saved");
+    return new ResponseEntity<>(userUpdate,HttpStatus.CREATED);
   }
 }

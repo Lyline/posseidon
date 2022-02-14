@@ -11,13 +11,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -119,5 +120,63 @@ class UserApiControllerTest {
                 "\"role\":\"\""+
                 "}"))
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void givenAExistingUserWhenUpdateThenUserIsSavedAndStatus201() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(user));
+    when(service.update(anyInt(),any())).thenReturn(user);
+
+    //When
+    mockMvc.perform(put("/api/users/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"username\":\"Username_Test\","+
+                "\"password\":\"Password_Test\","+
+                "\"fullName\":\"FullName_Test\","+
+                "\"role\":\"Role_Test\""+
+                "}"))
+
+        .andExpect(status().isCreated())
+
+        .andExpect(jsonPath("$.id",is(1)))
+        .andExpect(jsonPath("$.username",is("Username_Test")))
+        .andExpect(jsonPath("$.password",is("Password_Test")))
+        .andExpect(jsonPath("$.fullName",is("FullName_Test")))
+        .andExpect(jsonPath("$.role",is("Role_Test")));
+  }
+
+  @Test
+  void givenANotValidUserWhenUpdateThenUserIsNotSavedAndStatus400() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(user));
+    //When
+    mockMvc.perform(put("/api/users/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"username\":\"\","+
+                "\"password\":\"\","+
+                "\"fullName\":\"\","+
+                "\"role\":\"\""+
+                "}"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void givenANotExistUserWhenUpdateThenUserIsNotFoundAndStatus404() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.empty());
+
+    //When
+    mockMvc.perform(put("/api/users/5")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"username\":\"Username_Test\","+
+                "\"password\":\"Password_Test\","+
+                "\"fullName\":\"FullName_Test\","+
+                "\"role\":\"Role_Test\""+
+                "}"))
+        .andExpect(status().isNotFound());
   }
 }

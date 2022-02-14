@@ -6,13 +6,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 class UserServiceTest {
 
@@ -77,5 +78,40 @@ class UserServiceTest {
 
     //Then
     assertSame(actual,user);
+  }
+
+  @Test
+  void givenAExistUserWhenFindByIdThenUserIsFound() {
+    //Given
+    when(repository.findById(anyInt())).thenReturn(Optional.of(user));
+    //When
+    Optional<User>actual= classUnderTest.findById(1);
+
+    //Then
+    assertSame(actual.get(),user);
+  }
+
+  @Test
+  void givenANotExistUserWhenFindByIdThenUserIsEmpty() {
+    //Given
+    when(repository.findById(anyInt())).thenReturn(Optional.empty());
+    //When
+    Optional<User>actual= classUnderTest.findById(1);
+
+    //Then
+    assertTrue(actual.isEmpty());
+  }
+
+  @Test
+  void givenAExistingUserWhenUpdateThenUsereIsSaved() {
+    //Given
+    when(repository.save(any())).thenReturn(user);
+
+    //When
+    User actual= classUnderTest.update(1,userToSave);
+
+    //Then
+    assertSame(actual,user);
+    verify(repository,times(1)).save(userToSave);
   }
 }
