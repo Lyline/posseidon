@@ -6,9 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -94,5 +96,27 @@ class TradeServiceTest {
     classUnderTest.delete(1);
     //Then
     verify(repository,times(1)).deleteById(1);
+  }
+
+  @Test
+  void givenAExistTradeWhenFindByIdThenTradeIsFound() {
+    //Given
+    when(repository.findById(anyInt())).thenReturn(Optional.of(trade));
+    //When
+    Optional<Trade>actual= classUnderTest.findById(1);
+
+    //Then
+    assertSame(actual.get(),trade);
+  }
+
+  @Test
+  void givenANotExistTradeWhenFindByIdThenTradeIsEmpty() {
+    //Given
+    when(repository.findById(anyInt())).thenReturn(Optional.empty());
+    //When
+    Optional<Trade>actual= classUnderTest.findById(1);
+
+    //Then
+    assertTrue(actual.isEmpty());
   }
 }

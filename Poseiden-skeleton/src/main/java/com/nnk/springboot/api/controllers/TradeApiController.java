@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -35,8 +36,7 @@ public class TradeApiController {
 
   @PostMapping("/trades")
   public ResponseEntity<Trade>addTrade(@RequestBody Trade trade){
-    if (trade.getAccount().isBlank() | trade.getType().isBlank() |
-        trade.getBuyQuantity()==0){
+    if (trade.getAccount().isBlank() | trade.getType().isBlank() | trade.getBuyQuantity()==0){
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -44,5 +44,24 @@ public class TradeApiController {
     logger.info("Create - trade : Account ="+trade.getAccount()+", Type ="
         + trade.getType()+", Buy quantity ="+ trade.getBuyQuantity()+" is saved");
     return new ResponseEntity<>(tradeSave,HttpStatus.CREATED);
+  }
+
+  @PutMapping("/trades/{id}")
+  public ResponseEntity<Trade>updateTrade(@PathVariable(value = "id") Integer id,
+                                          @RequestBody Trade trade){
+    Optional<Trade> ruleNameIsExist=service.findById(id);
+    if (ruleNameIsExist.isEmpty()){
+      logger.info("Read - trade with id "+id+" is not exist");
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    if (trade.getAccount().isBlank() | trade.getType().isBlank() | trade.getBuyQuantity()==0){
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    Trade tradeUpdate =service.update(id,trade);
+    logger.info("Update - trade : Account ="+trade.getAccount()+", Type ="
+        + trade.getType()+", Buy quantity ="+ trade.getBuyQuantity()+" is saved");
+    return new ResponseEntity<>(tradeUpdate,HttpStatus.CREATED);
   }
 }

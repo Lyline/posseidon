@@ -11,13 +11,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -114,5 +115,59 @@ class TradeApiControllerTest {
                 "\"buyQuantity\":0,"+
                 "}"))
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void givenAExistingTradeWhenUpdateThenTradeIsSavedAndStatus201() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(trade));
+    when(service.update(anyInt(),any())).thenReturn(trade);
+
+    //When
+    mockMvc.perform(put("/api/trades/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"account\":\"Account_test\","+
+                "\"type\":\"Type_test\","+
+                "\"buyQuantity\":10.0"+
+                "}"))
+
+        .andExpect(status().isCreated())
+
+        .andExpect(jsonPath("$.tradeId",is(1)))
+        .andExpect(jsonPath("$.account",is("Account_test")))
+        .andExpect(jsonPath("$.type",is("Type_test")))
+        .andExpect(jsonPath("$.buyQuantity",is(10.0)));
+  }
+
+  @Test
+  void givenANotValidTradeWhenUpdateThenTradeIsNotSavedAndStatus400() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.of(trade));
+    //When
+    mockMvc.perform(put("/api/trades/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"account\":\"\","+
+                "\"type\":\"\","+
+                "\"buyQuantity\":0,"+
+                "}"))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void givenANotExistTradeWhenUpdateThenTradeIsNotFoundAndStatus404() throws Exception {
+    //Given
+    when(service.findById(anyInt())).thenReturn(Optional.empty());
+
+    //When
+    mockMvc.perform(put("/api/trades/5")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"account\":\"Account_test\","+
+                "\"type\":\"Type_test\","+
+                "\"buyQuantity\":10.0"+
+                "}"))
+        .andExpect(status().isNotFound());
   }
 }

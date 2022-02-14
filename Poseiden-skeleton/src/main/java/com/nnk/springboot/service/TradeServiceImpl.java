@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TradeServiceImpl implements TradeService{
@@ -32,6 +33,12 @@ public class TradeServiceImpl implements TradeService{
   @Transactional
   public Trade getById(Integer id) {
     return repository.getById(id);
+  }
+
+  @Override
+  @Transactional
+  public Optional<Trade> findById(Integer id) {
+    return repository.findById(id);
   }
 
   @Override
