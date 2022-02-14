@@ -20,4 +20,10 @@ public class UserServiceImpl implements UserService{
   public List<User> getAll() {
     return repository.findAll();
   }
+
+  @Override
+  @Transactional
+  public User create(User user) {
+    return repository.save(user);
+  }
 }

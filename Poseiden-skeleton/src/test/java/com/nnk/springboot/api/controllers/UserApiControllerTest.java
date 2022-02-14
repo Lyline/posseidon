@@ -14,8 +14,10 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,7 +37,7 @@ class UserApiControllerTest {
   void setUp() {
     user.setId(1);
     user.setUsername("Username_Test");
-    user.setPassword("Password");
+    user.setPassword("Password_Test");
     user.setFullName("FullName_Test");
     user.setRole("Role_Test");
 
@@ -78,5 +80,44 @@ class UserApiControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent())
         .andExpect(jsonPath("$", hasSize(0)));
+  }
+
+  @Test
+  void givenANewValidUserWhenCreateThenUserIsSavedAndStatus201() throws Exception {
+    //Given
+    when(service.create(any())).thenReturn(user);
+
+    //When
+    mockMvc.perform(post("/api/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"username\":\"Username_Test\","+
+                "\"password\":\"Password_Test\","+
+                "\"fullName\":\"FullName_Test\","+
+                "\"role\":\"Role_Test\""+
+                "}"))
+
+        .andExpect(status().isCreated())
+
+        .andExpect(jsonPath("$.id",is(1)))
+        .andExpect(jsonPath("$.username",is("Username_Test")))
+        .andExpect(jsonPath("$.password",is("Password_Test")))
+        .andExpect(jsonPath("$.fullName",is("FullName_Test")))
+        .andExpect(jsonPath("$.role",is("Role_Test")));
+  }
+
+  @Test
+  void givenANewNotValidUserWhenCreateThenUserIsNotSavedAndStatus400() throws Exception {
+    //Given
+    //When
+    mockMvc.perform(post("/api/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{" +
+                "\"username\":\"\","+
+                "\"password\":\"\","+
+                "\"fullName\":\"\","+
+                "\"role\":\"\""+
+                "}"))
+        .andExpect(status().isBadRequest());
   }
 }

@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -63,5 +65,17 @@ class UserServiceTest {
 
     //Then
     assertTrue(actual.isEmpty());
+  }
+
+  @Test
+  void givenANewUserWhenCreateThenUserIsSaved() {
+    //Given
+    when(repository.save(any())).thenReturn(user);
+
+    //When
+    User actual= classUnderTest.create(userToSave);
+
+    //Then
+    assertSame(actual,user);
   }
 }
