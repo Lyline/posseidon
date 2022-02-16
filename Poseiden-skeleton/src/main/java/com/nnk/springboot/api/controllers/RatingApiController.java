@@ -1,5 +1,6 @@
 package com.nnk.springboot.api.controllers;
 
+import com.nnk.springboot.api.controllers.exception.HandlerException;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.service.RatingServiceImpl;
 import org.slf4j.Logger;
@@ -8,12 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class RatingApiController {
+public class RatingApiController extends HandlerException {
 
   private final RatingServiceImpl service;
   private final Logger logger= LoggerFactory.getLogger(RatingApiController.class);
@@ -35,37 +37,27 @@ public class RatingApiController {
   }
 
   @PostMapping("/ratings")
-  public ResponseEntity<Rating>addRating(@RequestBody Rating rating){
-    if (rating.getMoodysRating().isBlank() | rating.getSandPRating().isBlank() |
-        rating.getFitchRating().isBlank() | rating.getOrderNumber()==null){
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
+  public ResponseEntity<Rating>addRating(@Valid @RequestBody Rating rating){
     Rating ratingSave=service.create(rating);
-    logger.info("Create - rating : Moody's rating ="+ rating.getMoodysRating()+"," +
-        " Sand P Rating ="+ rating.getSandPRating()+", Fitch rating ="+ rating.getFitchRating()+
-        "Order number ="+ rating.getOrderNumber()+" is saved");
+    logger.info("Create - rating : Moody's rating ="+ rating.getMoodysRating()+
+        ", Sand P Rating ="+ rating.getSandPRating()+", Fitch rating ="+ rating.getFitchRating()+
+        ", Order number ="+ rating.getOrderNumber()+" is saved");
     return new ResponseEntity<>(ratingSave,HttpStatus.CREATED);
   }
 
   @PutMapping("/ratings/{id}")
   public ResponseEntity<Rating>updateRating(@PathVariable(value = "id") Integer id,
-                                                 @RequestBody Rating rating){
+                                            @Valid @RequestBody Rating rating){
     Optional<Rating> ratingIsExist=service.findById(id);
     if (ratingIsExist.isEmpty()){
       logger.info("Read - rating with id "+id+" is not exist");
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    if (rating.getMoodysRating().isBlank() | rating.getSandPRating().isBlank() |
-        rating.getFitchRating().isBlank() | rating.getOrderNumber()==null){
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
     Rating curveUpdate=service.update(id,rating);
-    logger.info("Update - rating : Moody's rating ="+ rating.getMoodysRating()+"," +
-        " Sand P Rating ="+ rating.getSandPRating()+", Fitch rating ="+ rating.getFitchRating()+
-        "Order number ="+ rating.getOrderNumber()+" is saved");
+    logger.info("Update - rating : Moody's rating ="+ rating.getMoodysRating()+
+        ", Sand P Rating ="+ rating.getSandPRating()+", Fitch rating ="+ rating.getFitchRating()+
+        ", Order number ="+ rating.getOrderNumber()+" is saved");
     return new ResponseEntity<>(curveUpdate,HttpStatus.CREATED);
   }
 

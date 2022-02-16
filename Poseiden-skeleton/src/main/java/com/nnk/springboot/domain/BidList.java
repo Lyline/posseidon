@@ -9,7 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 @Getter
@@ -31,9 +31,9 @@ public class BidList {
   @Column(columnDefinition = "VARCHAR(30)")
   private String type;
 
-  @NotNull(message = "Bid quantity must not be null")
-  @DecimalMin(value = "0.1", message="Enter only numbers")
-  @Column(columnDefinition = "DOUBLE")
+  @Positive(message = "Quantity must be positive")
+  @DecimalMin(value = "0.1",message="Enter minimum 0.1")
+  @Column(nullable = false, columnDefinition = "DOUBLE")
   private double bidQuantity;
 
   @Column(columnDefinition = "DOUBLE")

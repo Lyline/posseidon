@@ -1,5 +1,6 @@
 package com.nnk.springboot.api.controllers;
 
+import com.nnk.springboot.api.controllers.exception.HandlerException;
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.service.RuleNameServiceImpl;
 import org.slf4j.Logger;
@@ -8,12 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class RuleNameApiController {
+public class RuleNameApiController extends HandlerException {
 
   private final RuleNameServiceImpl service;
   private final Logger logger= LoggerFactory.getLogger(RuleNameApiController.class);
@@ -35,13 +37,7 @@ public class RuleNameApiController {
   }
 
   @PostMapping("/ruleNames")
-  public ResponseEntity<RuleName>addRuleName(@RequestBody RuleName ruleName){
-    if (ruleName.getName().isBlank() | ruleName.getDescription().isBlank() |
-        ruleName.getJson().isBlank() | ruleName.getTemplate().isBlank() |
-        ruleName.getSqlStr().isBlank() | ruleName.getSqlPart().isBlank()){
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
+  public ResponseEntity<RuleName>addRuleName(@Valid @RequestBody RuleName ruleName){
     RuleName ruleNameSave=service.create(ruleName);
     logger.info("Create - rule name : Name ="+ruleName.getName()+", Description ="
         + ruleName.getDescription()+" is saved");
@@ -50,17 +46,11 @@ public class RuleNameApiController {
 
   @PutMapping("/ruleNames/{id}")
   public ResponseEntity<RuleName>updateRuleName(@PathVariable(value = "id") Integer id,
-                                                 @RequestBody RuleName ruleName){
+                                                @Valid @RequestBody RuleName ruleName){
     Optional<RuleName> ruleNameIsExist=service.findById(id);
     if (ruleNameIsExist.isEmpty()){
       logger.info("Read - rule name with id "+id+" is not exist");
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    if (ruleName.getName().isBlank() | ruleName.getDescription().isBlank() |
-        ruleName.getJson().isBlank() | ruleName.getTemplate().isBlank() |
-        ruleName.getSqlStr().isBlank() | ruleName.getSqlPart().isBlank()){
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     RuleName curveUpdate=service.update(id,ruleName);

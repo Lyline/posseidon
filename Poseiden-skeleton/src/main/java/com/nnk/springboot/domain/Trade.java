@@ -29,7 +29,7 @@ public class Trade {
   @Column(columnDefinition = "VARCHAR(30)")
   private String type;
 
-  @DecimalMin(value="0.1", message = "Buy quantity must not be null")
+  @DecimalMin(value="0.1", message = "Buy quantity must not be minimum equal to 0.1")
   @Column(columnDefinition = "DOUBLE")
   private double buyQuantity;
 

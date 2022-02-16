@@ -125,7 +125,8 @@ class BidListControllerTest {
 
         .andExpect(content().string(containsString("Account is mandatory")))
         .andExpect(content().string(containsString("Type is mandatory")))
-        .andExpect(content().string(containsString("Enter only numbers")));
+        .andExpect(content().string(containsString("Enter minimum 0.1")))
+        .andExpect(content().string(containsString("Quantity must be positive")));
   }
 
     @Test

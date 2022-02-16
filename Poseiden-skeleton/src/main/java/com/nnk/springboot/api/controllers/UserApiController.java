@@ -1,6 +1,7 @@
 package com.nnk.springboot.api.controllers;
 
 import com.nnk.springboot.api.controllers.dto.UserDTO;
+import com.nnk.springboot.api.controllers.exception.HandlerException;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.service.UserServiceImpl;
 import org.modelmapper.ModelMapper;
@@ -10,13 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
-public class UserApiController {
+public class UserApiController extends HandlerException {
 
   private final UserServiceImpl service;
 
@@ -47,13 +49,8 @@ public class UserApiController {
   }
 
   @PostMapping("/users")
-  public ResponseEntity<User>addUser(@RequestBody User user){
-    if (user.getUsername().isBlank() | user.getPassword().isBlank() |
-        user.getFullName().isBlank() | user.getRole().isBlank()){
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    User userSave=service.create(user);
+  public ResponseEntity<User>addUser(@Valid @RequestBody User user){
+   User userSave=service.create(user);
     logger.info("Create - user : Username ="+user.getUsername()+", Full name ="
         + user.getFullName()+", Role ="+ user.getRole()+" is saved");
     return new ResponseEntity<>(userSave,HttpStatus.CREATED);
@@ -61,16 +58,11 @@ public class UserApiController {
 
   @PutMapping("/users/{id}")
   public ResponseEntity<User>updateUser(@PathVariable(value = "id") Integer id,
-                                          @RequestBody User user){
+                                        @Valid @RequestBody User user){
     Optional<User> userIsExist=service.findById(id);
     if (userIsExist.isEmpty()){
       logger.info("Read - user with id "+id+" is not exist");
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    if (user.getUsername().isBlank() | user.getPassword().isBlank() |
-        user.getFullName().isBlank() | user.getRole().isBlank()){
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     User userUpdate =service.update(id,user);

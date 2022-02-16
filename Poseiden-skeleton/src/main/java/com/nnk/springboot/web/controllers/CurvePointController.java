@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 @Controller
 public class CurvePointController {
-    // TODO: Inject Curve Point service
 
     private final CurvePointServiceImpl service;
 

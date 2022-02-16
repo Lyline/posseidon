@@ -107,7 +107,7 @@ class CurvePointControllerTest {
         .andExpect(status().isOk())
 
         .andExpect(content().string(containsString("Curve Id must not be null")))
-        .andExpect(content().string(containsString("Term must not be null")))
+        .andExpect(content().string(containsString("Term must be minimum equal to 0.1")))
         .andExpect(content().string(containsString("Value must not be null")));
   }
   @Test
@@ -161,7 +161,7 @@ class CurvePointControllerTest {
         .andExpect(status().isOk())
 
         .andExpect(content().string(containsString("Curve Id must not be null")))
-        .andExpect(content().string(containsString("Term must not be null")))
+        .andExpect(content().string(containsString("Term must be minimum equal to 0.1")))
         .andExpect(content().string(containsString("Value must not be null")));
   }
 

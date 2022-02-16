@@ -109,7 +109,7 @@ class TradeControllerTest {
 
         .andExpect(content().string(containsString("Account must not be empty")))
         .andExpect(content().string(containsString("Type must not be empty")))
-        .andExpect(content().string(containsString("Buy quantity must not be null")));
+        .andExpect(content().string(containsString("Buy quantity must not be minimum equal to 0.1")));
   }
 
   @Test
@@ -168,7 +168,7 @@ class TradeControllerTest {
 
         .andExpect(content().string(containsString("Account must not be empty")))
         .andExpect(content().string(containsString("Type must not be empty")))
-        .andExpect(content().string(containsString("Buy quantity must not be null")));
+        .andExpect(content().string(containsString("Buy quantity must not be minimum equal to 0.1")));
   }
 
   @Test

@@ -1,5 +1,6 @@
 package com.nnk.springboot.api.controllers;
 
+import com.nnk.springboot.api.controllers.exception.HandlerException;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.service.CurvePointServiceImpl;
@@ -9,12 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class CurvePointApiController {
+public class CurvePointApiController extends HandlerException {
 
   private final CurvePointServiceImpl service;
   private final Logger logger= LoggerFactory.getLogger(CurvePointApiController.class);
@@ -36,12 +38,9 @@ public class CurvePointApiController {
   }
 
   @PostMapping("/curvePoints")
-  public ResponseEntity<CurvePoint>addCurvePoint(@RequestBody CurvePoint curve){
-    if (curve.getCurveId()==null | curve.getTerm()==0 | curve.getValue()==0){
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
+  public ResponseEntity<CurvePoint>addCurvePoint(@Valid @RequestBody CurvePoint curve){
     CurvePoint curveSave=service.create(curve);
+
     logger.info("Create - curve point : Curve id ="+curve.getCurveId()+", Term ="
         + curve.getTerm()+", Value ="+ curve.getValue()+" is saved");
     return new ResponseEntity<>(curveSave,HttpStatus.CREATED);
@@ -49,15 +48,11 @@ public class CurvePointApiController {
 
   @PutMapping("/curvePoints/{id}")
   public ResponseEntity<CurvePoint>updateCurvePoint(@PathVariable(value = "id") Integer id,
-                                              @RequestBody CurvePoint curve){
+                                                    @Valid @RequestBody CurvePoint curve){
     Optional<CurvePoint> curveIsExist=service.findById(id);
     if (curveIsExist.isEmpty()){
       logger.info("Read - curve point with id "+id+" is not exist");
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    if (curve.getCurveId()==null | curve.getTerm()==0 | curve.getValue()==0){
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     CurvePoint curveUpdate=service.update(id,curve);

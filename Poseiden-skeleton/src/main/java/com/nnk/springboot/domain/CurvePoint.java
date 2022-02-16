@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ public class CurvePoint {
 
   @Column(columnDefinition = "TINYINT")
   @NotNull(message="Curve Id must not be null")
-  @Min(value = 1)
+  @Min(value = 1, message = "Curve Id must be minimum equal to 1")
   private Integer curveId;
 
   @Column(columnDefinition = "TIMESTAMP")
@@ -31,8 +32,7 @@ public class CurvePoint {
   private LocalDateTime asOfDate;
 
   @Column(columnDefinition = "DOUBLE")
-  @NotNull
-  @Min(value = 1,message = "Term must not be null")
+  @DecimalMin(value = "0.1",message = "Term must be minimum equal to 0.1")
   private double term;
 
   @Column(columnDefinition = "DOUBLE")
