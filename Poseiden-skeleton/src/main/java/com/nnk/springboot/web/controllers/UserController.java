@@ -30,15 +30,14 @@ public class UserController {
     }
 
     @GetMapping("/user/add")
-    public String addUser(User bid) {
+    public String addUser(User user, Model model) {
+        model.addAttribute("user",user);
         return "user/add";
     }
 
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result, Model model) {
         if (!result.hasErrors()) {
-           /* BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setPassword(encoder.encode(user.getPassword()));*/
             service.create(user);
             model.addAttribute("users", service.getAll());
             return "redirect:/user/list";
@@ -60,9 +59,6 @@ public class UserController {
         if (result.hasErrors()) {
             return "user/update";
         }
-
-        /*BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));*/
 
         service.update(id,user);
         model.addAttribute("users", service.getAll());
