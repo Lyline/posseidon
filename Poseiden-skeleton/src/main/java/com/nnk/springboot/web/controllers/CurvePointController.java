@@ -65,6 +65,8 @@ public class CurvePointController {
             .map(curve->mapper.map(curve,CurvePointDTO.class))
             .collect(Collectors.toList());
 
+        logger.info("Create - curve point : curve point id= "+curvePoint.getCurveId()+
+            ", term= "+ curvePoint.getTerm()+", value= "+ curvePoint.getValue()+" is saved");
         model.addAttribute("curves",curvesDTO);
         return "curvePoint/list";
     }
@@ -86,15 +88,17 @@ public class CurvePointController {
 
         service.update(id,curvePoint);
 
+        logger.info("Update - curve point : curve point id= "+curvePoint.getCurveId()+
+            ", term= "+ curvePoint.getTerm()+", value= "+ curvePoint.getValue()+" is saved");
         model.addAttribute("curves",service.getAll());
         return "curvePoint/list";
     }
 
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Curve by Id and delete the Curve, return to Curve list
         service.delete(id);
 
+        logger.info("Delete - curve point with id "+id+" is deleted");
         model.addAttribute("curves",service.getAll());
         return "curvePoint/list";
     }

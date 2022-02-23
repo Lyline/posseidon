@@ -2,6 +2,8 @@ package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.service.UserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,12 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class UserController {
 
     private final UserServiceImpl service;
+    private final Logger logger= LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserServiceImpl service) {
         this.service = service;
@@ -25,7 +29,10 @@ public class UserController {
     @RequestMapping("/user/list")
     public String home(Model model)
     {
-        model.addAttribute("users", service.getAll());
+        List<User>users=service.getAll();
+
+        logger.info("Read = all user list : "+users.size()+" user(s)");
+        model.addAttribute("users", users);
         return "user/list";
     }
 
@@ -39,6 +46,9 @@ public class UserController {
     public String validate(@Valid User user, BindingResult result, Model model) {
         if (!result.hasErrors()) {
             service.create(user);
+
+            logger.info("Create - user: full name= "+user.getFullName()+", username= "+ user.getUsername()+
+                ", role= "+user.getRole()+" is saved");
             model.addAttribute("users", service.getAll());
             return "redirect:/user/list";
         }
@@ -49,6 +59,8 @@ public class UserController {
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         User user = service.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         user.setPassword("");
+
+        logger.info("Read - user: full name= "+user.getFullName()+" , username= "+ user.getUsername());
         model.addAttribute("user", user);
         return "user/update";
     }
@@ -61,6 +73,9 @@ public class UserController {
         }
 
         service.update(id,user);
+
+        logger.info("Update - user: full name= "+user.getFullName()+", username= "+ user.getUsername()+
+            ", role= "+user.getRole()+" is saved");
         model.addAttribute("users", service.getAll());
         return "redirect:/user/list";
     }
@@ -73,6 +88,7 @@ public class UserController {
             service.delete(id);
         }else new IllegalArgumentException("Invalid user Id:" + id);
 
+        logger.info("Delete - user with id "+id+" is deleted");
         model.addAttribute("users", service.getAll());
         return "redirect:/user/list";
     }
