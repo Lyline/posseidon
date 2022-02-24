@@ -22,7 +22,7 @@ public class Application implements CommandLineRunner {
 		User user= new User();
 		user.setUsername("userTest");
 		user.setFullName("UserFullName");
-		user.setPassword("user123");
+		user.setPassword("user123A!");
 		user.setRole("USER");
 
 		service.create(user);
@@ -30,7 +30,7 @@ public class Application implements CommandLineRunner {
 		User user1= new User();
 		user1.setUsername("adminTest");
 		user1.setFullName("AdminFullName");
-		user1.setPassword("admin123");
+		user1.setPassword("admin123A!");
 		user1.setRole("ADMIN");
 
 		service.create(user1);
