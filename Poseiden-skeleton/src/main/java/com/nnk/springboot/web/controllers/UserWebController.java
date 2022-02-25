@@ -15,14 +15,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Controller
-public class UserController {
+public class UserWebController {
 
     private final UserServiceImpl service;
-    private final Logger logger= LoggerFactory.getLogger(UserController.class);
+    private final Logger logger= LoggerFactory.getLogger(UserWebController.class);
 
-    public UserController(UserServiceImpl service) {
+    private static final String PASSWORD_REGEX =
+        "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#!$%^&+=]).{8,16}$";
+
+    private static final Pattern PASSWORD_PATTERN =
+        Pattern.compile(PASSWORD_REGEX);
+
+    boolean passwordInvalid= false;
+
+    public UserWebController(UserServiceImpl service) {
         this.service = service;
     }
 
@@ -31,25 +40,39 @@ public class UserController {
     {
         List<User>users=service.getAll();
 
-        logger.info("Read = all user list : "+users.size()+" user(s)");
+        logger.info("Read - all user list : "+users.size()+" user(s)");
         model.addAttribute("users", users);
         return "user/list";
     }
 
     @GetMapping("/user/add")
     public String addUser(User user, Model model) {
+
+        model.addAttribute("passwordInvalid",passwordInvalid);
         model.addAttribute("user",user);
         return "user/add";
     }
 
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result, Model model) {
+
+        if (!PASSWORD_PATTERN.matcher(user.getPassword()).matches()) {
+            passwordInvalid=true;
+            model.addAttribute("passwordInvalid", passwordInvalid);
+            return "user/add";
+        }
+
         if (!result.hasErrors()) {
+            passwordInvalid=false;
+
             service.create(user);
 
             logger.info("Create - user: full name= "+user.getFullName()+", username= "+ user.getUsername()+
                 ", role= "+user.getRole()+" is saved");
+
+            model.addAttribute("passwordInvalid", passwordInvalid);
             model.addAttribute("users", service.getAll());
+
             return "redirect:/user/list";
         }
         return "user/add";
@@ -68,14 +91,23 @@ public class UserController {
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
                              BindingResult result, Model model) {
+        if (!PASSWORD_PATTERN.matcher(user.getPassword()).matches()) {
+            passwordInvalid=true;
+            model.addAttribute("passwordInvalid", passwordInvalid);
+            return "user/update";
+        }
+
         if (result.hasErrors()) {
             return "user/update";
         }
 
         service.update(id,user);
 
+        passwordInvalid=false;
+
         logger.info("Update - user: full name= "+user.getFullName()+", username= "+ user.getUsername()+
             ", role= "+user.getRole()+" is saved");
+        model.addAttribute("passwordInvalid", passwordInvalid);
         model.addAttribute("users", service.getAll());
         return "redirect:/user/list";
     }
