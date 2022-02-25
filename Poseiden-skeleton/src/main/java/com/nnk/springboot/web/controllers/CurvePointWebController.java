@@ -19,18 +19,33 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ The type Curve point web controller.
+ */
 @Controller
-public class CurvePointController {
+public class CurvePointWebController {
 
     private final CurvePointServiceImpl service;
 
     private final ModelMapper mapper=new ModelMapper();
-    private final Logger logger= LoggerFactory.getLogger(CurvePointController.class);
+    private final Logger logger= LoggerFactory.getLogger(CurvePointWebController.class);
 
-    public CurvePointController(CurvePointServiceImpl service) {
+    /**
+     Instantiates a new Curve point controller.
+
+     @param service the service
+     */
+    public CurvePointWebController(CurvePointServiceImpl service) {
         this.service = service;
     }
 
+    /**
+     Show homepage of curve point with the list of curve points.
+
+     @param model the model
+
+     @return the curve point homepage with le list of curve point web page
+     */
     @RequestMapping("/curvePoint/list")
     public String home(Model model)
     {
@@ -44,16 +59,34 @@ public class CurvePointController {
         return "curvePoint/list";
     }
 
+    /**
+     Show the add curve point form for create a new curve point.
+
+     @param curvePoint the curve point
+     @param model      the model
+
+     @return the curve point add form web page
+     */
     @GetMapping("/curvePoint/add")
     public String addCurvePointForm(CurvePoint curvePoint, Model model) {
         model.addAttribute("curvePoint", curvePoint);
         return "curvePoint/add";
     }
 
+    /**
+     Validate the creating curve point.
+
+     @param curvePoint the curve point
+     @param error      the error
+     @param model      the model
+     @param response   the response
+
+     @return the curve point homepage with status 201 if the curve point is created, or the add form with error message
+     */
     @PostMapping("/curvePoint/validate")
-    public String validate(@Valid CurvePoint curvePoint, BindingResult result,
+    public String validate(@Valid CurvePoint curvePoint, BindingResult error,
                            Model model, HttpServletResponse response) {
-        if (result.hasErrors()){
+        if (error.hasErrors()){
             return "curvePoint/add";
         }
 
@@ -71,6 +104,14 @@ public class CurvePointController {
         return "curvePoint/list";
     }
 
+    /**
+     Show curve point update form.
+
+     @param id    the id of the curve point to update
+     @param model the model
+
+     @return the curve point update form web page
+     */
     @GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         CurvePoint curve=service.getById(id);
@@ -79,10 +120,20 @@ public class CurvePointController {
         return "curvePoint/update";
     }
 
+    /**
+     Validate the curve point update form.
+
+     @param id         the id of the curve point to update
+     @param curvePoint the curve point
+     @param error      the error
+     @param model      the model
+
+     @return the curve point homepage if the curve point is updated, or the curve point update form with the error message
+     */
     @PostMapping("/curvePoint/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
-                             BindingResult result, Model model) {
-        if (result.hasErrors()){
+                             BindingResult error, Model model) {
+        if (error.hasErrors()){
             return "curvePoint/update";
         }
 
@@ -94,6 +145,14 @@ public class CurvePointController {
         return "curvePoint/list";
     }
 
+    /**
+     Delete bid.
+
+     @param id    the id of the curve point
+     @param model the model
+
+     @return the curve point homepage when the curve point is deleted
+     */
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         service.delete(id);

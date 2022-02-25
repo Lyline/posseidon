@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/**
+ The type Bid DTO use in the web application.
+ */
 @Setter
 @Getter
 @RequiredArgsConstructor

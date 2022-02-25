@@ -16,16 +16,31 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ The type Rating web controller.
+ */
 @Controller
-public class RatingController {
+public class RatingWebController {
 
     private final RatingServiceImpl service;
-    private final Logger logger= LoggerFactory.getLogger(RatingController.class);
+    private final Logger logger= LoggerFactory.getLogger(RatingWebController.class);
 
-    public RatingController(RatingServiceImpl service) {
+    /**
+     Instantiates a new Rating web controller.
+
+     @param service the service
+     */
+    public RatingWebController(RatingServiceImpl service) {
         this.service = service;
     }
 
+    /**
+     Show the rating homepage with the list of the ratings.
+
+     @param model the model
+
+     @return the rating homepage with the list of ratings web page
+     */
     @RequestMapping("/rating/list")
     public String home(Model model)
     {
@@ -36,16 +51,34 @@ public class RatingController {
         return "rating/list";
     }
 
+    /**
+     Show the add rating form.
+
+     @param rating the rating
+     @param model  the model
+
+     @return the rating add form web page
+     */
     @GetMapping("/rating/add")
     public String addRatingForm(Rating rating, Model model) {
         model.addAttribute("rating", rating);
         return "rating/add";
     }
 
+    /**
+     Validate the creating rating.
+
+     @param rating   the rating
+     @param error   the error
+     @param model    the model
+     @param response the response
+
+     @return the rating homepage with status 201 if the rating is created, or the add form with error message
+     */
     @PostMapping("/rating/validate")
-    public String validate(@Valid Rating rating, BindingResult result,
+    public String validate(@Valid Rating rating, BindingResult error,
                            Model model, HttpServletResponse response) {
-        if (result.hasErrors()){
+        if (error.hasErrors()){
             return "rating/add";
         }
 
@@ -59,6 +92,14 @@ public class RatingController {
         return "rating/list";
     }
 
+    /**
+     Show the update rating form.
+
+     @param id    the id of the rating to update
+     @param model the model
+
+     @return the update rating form web page
+     */
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Rating rating=service.getById(id);
@@ -70,6 +111,16 @@ public class RatingController {
         return "rating/update";
     }
 
+    /**
+     Validate the update rating form.
+
+     @param id     the id
+     @param rating the rating
+     @param result the result
+     @param model  the model
+
+     @return the rating homepage if the rating is updated, or the rating update form with the error message
+     */
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
                              BindingResult result, Model model) {
@@ -85,6 +136,14 @@ public class RatingController {
         return "rating/list";
     }
 
+    /**
+     Delete rating.
+
+     @param id    the id of the rating to delete
+     @param model the model
+
+     @return the rating homepage when the rating is deleted
+     */
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
         service.delete(id);

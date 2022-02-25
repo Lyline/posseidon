@@ -19,17 +19,32 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ The type Trade web controller.
+ */
 @Controller
-public class TradeController {
+public class TradeWebController {
     private final TradeServiceImpl service;
 
     private final ModelMapper mapper= new ModelMapper();
-    private final Logger logger= LoggerFactory.getLogger(TradeController.class);
+    private final Logger logger= LoggerFactory.getLogger(TradeWebController.class);
 
-    public TradeController(TradeServiceImpl service) {
+    /**
+     Instantiates a new Trade web controller.
+
+     @param service the service
+     */
+    public TradeWebController(TradeServiceImpl service) {
         this.service = service;
     }
 
+    /**
+     Show trade homepage with the list of trades.
+
+     @param model the model
+
+     @return the trade homepage with the list of trades web page
+     */
     @RequestMapping("/trade/list")
     public String home(Model model){
         List<Trade> trades= service.getAll();
@@ -43,16 +58,34 @@ public class TradeController {
         return "trade/list";
     }
 
+    /**
+     Show the add trade form.
+
+     @param trade the trade
+     @param model the model
+
+     @return the trade add form web page
+     */
     @GetMapping("/trade/add")
     public String addTrade(Trade trade, Model model) {
         model.addAttribute("trade",trade);
         return "trade/add";
     }
 
+    /**
+     Validate the trade creating.
+
+     @param trade    the trade
+     @param error   the error
+     @param model    the model
+     @param response the response
+
+     @return the trade homepage with status 201 if the trade is created, or the add form with error message
+     */
     @PostMapping("/trade/validate")
-    public String validate(@Valid Trade trade, BindingResult result,
+    public String validate(@Valid Trade trade, BindingResult error,
                            Model model, HttpServletResponse response) {
-        if (result.hasErrors()){
+        if (error.hasErrors()){
             return "trade/add";
         }
 
@@ -65,6 +98,14 @@ public class TradeController {
         return "trade/list";
     }
 
+    /**
+     Show the trade update form.
+
+     @param id    the id
+     @param model the model
+
+     @return the update trade form web page
+     */
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Trade trade= service.getById(id);
@@ -75,10 +116,20 @@ public class TradeController {
         return "trade/update";
     }
 
+    /**
+     Update trade string.
+
+     @param id     the id of the trade
+     @param trade  the trade
+     @param error  the error
+     @param model  the model
+
+     @return the trade homepage if the trade is updated, or the trade update form with the error message
+     */
     @PostMapping("/trade/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
-                             BindingResult result, Model model) {
-        if (result.hasErrors()){
+                             BindingResult error, Model model) {
+        if (error.hasErrors()){
             return "trade/update";
         }
 
@@ -90,6 +141,14 @@ public class TradeController {
         return "trade/list";
     }
 
+    /**
+     Delete trade.
+
+     @param id    the id
+     @param model the model
+
+     @return the trade homepage when the trade is deleted
+     */
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
         service.delete(id);

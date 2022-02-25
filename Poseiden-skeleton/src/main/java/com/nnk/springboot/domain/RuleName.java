@@ -7,6 +7,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+/**
+ The type Rule name.
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -42,6 +45,16 @@ public class RuleName {
   @Column(columnDefinition = "VARCHAR(125)")
   private String sqlPart;
 
+  /**
+   Instantiates a new Rule name.
+
+   @param name        the name
+   @param description the description
+   @param json        the json
+   @param template    the template
+   @param sqlStr      the sql str
+   @param sqlPart     the sql part
+   */
   public RuleName(String name, String description, String json, String template, String sqlStr, String sqlPart) {
     this.name = name;
     this.description = description;

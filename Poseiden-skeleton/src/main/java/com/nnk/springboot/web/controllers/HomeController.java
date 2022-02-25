@@ -1,26 +1,24 @@
 package com.nnk.springboot.web.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-
+/**
+ The type Home web controller.
+ */
 @Controller
 public class HomeController
 {
 
+	/**
+	 Show homepage of web application.
+
+	 @return the homepage of web application
+	 */
 	@RequestMapping("/")
-	public String home(HttpServletRequest request)
+	public String home()
 	{
 		return "home";
 	}
-
-	@RequestMapping("/admin/home")
-	public String adminHome(Model model)
-	{
-		return "redirect:/bidList/list";
-	}
-
 
 }

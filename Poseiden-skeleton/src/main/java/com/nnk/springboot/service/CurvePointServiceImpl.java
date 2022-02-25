@@ -8,10 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ The type Curve point service implementation.
+ */
 @Service
 public class CurvePointServiceImpl implements CurvePointService {
   private final CurvePointRepository repository;
 
+  /**
+   Instantiates a new Curve point service.
+
+   @param repository the repository
+   */
   public CurvePointServiceImpl(CurvePointRepository repository) {
     this.repository = repository;
   }
@@ -35,6 +43,7 @@ public class CurvePointServiceImpl implements CurvePointService {
   }
 
   @Override
+  @Transactional
   public Optional<CurvePoint> findById(Integer id) {
     return repository.findById(id);
   }

@@ -11,10 +11,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ The type Handler exception.
+ */
 public class HandlerException extends Exception{
 
   private final Logger logger= LoggerFactory.getLogger(HandlerException.class);
 
+  /**
+   Handle validation exceptions map for the form.
+
+   @param ex the exception
+
+   @return the map of error messages with the field and the error message
+   */
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {

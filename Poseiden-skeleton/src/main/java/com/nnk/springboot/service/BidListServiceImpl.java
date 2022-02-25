@@ -8,9 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ The type bid service implementation.
+ */
 @Service
 public class BidListServiceImpl implements BidListService {
   private final BidListRepository repository;
+
+  /**
+   Instantiates a new Bid list service.
+
+   @param repository the repository
+   */
   public BidListServiceImpl(BidListRepository repository) {
     this.repository = repository;
   }
@@ -38,6 +47,7 @@ public class BidListServiceImpl implements BidListService {
   public Optional<BidList> findById(Integer id){
     return repository.findById(id);
   }
+
   @Override
   @Transactional
   public BidList update(Integer id, BidList bidToUpdate) {

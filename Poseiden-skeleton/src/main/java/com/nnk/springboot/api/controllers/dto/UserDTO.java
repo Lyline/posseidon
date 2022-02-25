@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/**
+ The User DTO use in the API application.
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor

@@ -19,19 +19,34 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ The type Bid web controller.
+ */
 @Controller
-public class BidListController {
+public class BidListWebController {
    private final BidListServiceImpl service;
 
     private final ModelMapper mapper=new ModelMapper();
-    private final Logger logger= LoggerFactory.getLogger(BidListController.class);
+    private final Logger logger= LoggerFactory.getLogger(BidListWebController.class);
 
-    public BidListController(BidListServiceImpl service) {
+  /**
+   Instantiates a new Bid web controller.
+
+   @param service the service
+   */
+  public BidListWebController(BidListServiceImpl service) {
         this.service = service;
     }
 
-    @RequestMapping("/bidList/list")
-    public String home(Model model, HttpServletResponse response){
+  /**
+   Show homepage of bid with the list of bids recorded.
+
+   @param model    the model
+
+   @return the bid homepage with the list of bids web page
+   */
+  @RequestMapping("/bidList/list")
+    public String home(Model model){
       List<BidList>bids=service.getAll();
 
       List<BidListDTO>bidsDTO=bids.stream()
@@ -43,16 +58,34 @@ public class BidListController {
       return "/bidList/list";
     }
 
-    @GetMapping("/bidList/add")
+  /**
+   Show bid form for create a new bid
+
+   @param bid   the bid
+   @param model the model
+
+   @return the add form web page
+   */
+  @GetMapping("/bidList/add")
     public String addBidForm(BidList bid,Model model) {
       model.addAttribute("bidList",bid);
       return "/bidList/add";
     }
 
-    @PostMapping("/bidList/validate")
-    public String validate(@Valid BidList bid, BindingResult result,
+  /**
+   Validate the creating bid.
+
+   @param bid      the bid
+   @param error    the error
+   @param model    the model
+   @param response the response
+
+   @return the bid homepage with status 201 if the bid is created, or the add form with error message
+   */
+  @PostMapping("/bidList/validate")
+    public String validate(@Valid BidList bid, BindingResult error,
                            Model model, HttpServletResponse response) {
-      if (result.hasErrors()){
+      if (error.hasErrors()){
         return "/bidList/add";
       }else response.setStatus(HttpServletResponse.SC_CREATED);
 
@@ -70,7 +103,15 @@ public class BidListController {
       return "/bidList/list";
     }
 
-    @GetMapping("/bidList/update/{id}")
+  /**
+   Show the bid update form.
+
+   @param id    the id of the bid to update
+   @param model the model
+
+   @return the bid update form web page
+   */
+  @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
       BidList bid= service.getById(id);
 
@@ -80,10 +121,21 @@ public class BidListController {
         return "/bidList/update";
     }
 
-    @PostMapping("/bidList/update/{id}")
+  /**
+   Validate the update bid form.
+
+   @param id       the id of the bid to update
+   @param bidList  the bid to submit
+   @param error    the error
+   @param model    the model
+   @param response the response
+
+   @return the bid homepage with status 201 when the bid is updated, or the bid update form with the error message
+   */
+  @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
-                             BindingResult result, Model model, HttpServletResponse response) {
-      if (result.hasErrors()){
+                             BindingResult error, Model model, HttpServletResponse response) {
+      if (error.hasErrors()){
         return "/bidList/update";
       }else response.setStatus(HttpServletResponse.SC_CREATED);
 
@@ -96,7 +148,15 @@ public class BidListController {
       return "redirect:/bidList/list";
     }
 
-    @GetMapping("/bidList/delete/{id}")
+  /**
+   Delete bid.
+
+   @param id    the id of the bid to delete
+   @param model the model
+
+   @return the bid homepage when the bid is deleted
+   */
+  @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
       service.delete(id);
 

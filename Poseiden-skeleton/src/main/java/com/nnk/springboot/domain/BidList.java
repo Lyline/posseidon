@@ -12,6 +12,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
+/**
+ The type Bid list.
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -92,6 +95,13 @@ public class BidList {
   @Column(columnDefinition = "VARCHAR(125)")
   private String side;
 
+  /**
+   Instantiates a new Bid list with the mandatory fields.
+
+   @param account     the account
+   @param type        the type
+   @param bidQuantity the bid quantity
+   */
   public BidList(String account, String type, double bidQuantity) {
     this.account = account;
     this.type = type;

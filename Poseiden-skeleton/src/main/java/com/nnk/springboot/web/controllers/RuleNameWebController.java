@@ -16,15 +16,30 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ The type Rule name web controller.
+ */
 @Controller
-public class RuleNameController {
+public class RuleNameWebController {
     private final RuleNameServiceImpl service;
-    private final Logger logger= LoggerFactory.getLogger(RuleNameController.class);
+    private final Logger logger= LoggerFactory.getLogger(RuleNameWebController.class);
 
-    public RuleNameController(RuleNameServiceImpl service) {
+    /**
+     Instantiates a new Rule name web controller.
+
+     @param service the service
+     */
+    public RuleNameWebController(RuleNameServiceImpl service) {
         this.service = service;
     }
 
+    /**
+     Show the rule name homepage with the list of rule names.
+
+     @param model the model
+
+     @return the rule name homepage with the list of rule names web page
+     */
     @RequestMapping("/ruleName/list")
     public String home(Model model){
         List<RuleName>ruleNames= service.getAll();
@@ -34,16 +49,34 @@ public class RuleNameController {
         return "ruleName/list";
     }
 
+    /**
+     Show the add rule name form.
+
+     @param ruleName the rule name
+     @param model    the model
+
+     @return the rule name add form web page
+     */
     @GetMapping("/ruleName/add")
     public String addRuleForm(RuleName ruleName, Model model) {
         model.addAttribute("ruleName", ruleName);
         return "ruleName/add";
     }
 
+    /**
+     Validate the rule name creating.
+
+     @param ruleName the rule name
+     @param error   the error
+     @param model    the model
+     @param response the response
+
+     @return the rule name homepage with status 201 if the rule name is created, or the add form with error message
+     */
     @PostMapping("/ruleName/validate")
-    public String validate(@Valid RuleName ruleName, BindingResult result,
+    public String validate(@Valid RuleName ruleName, BindingResult error,
                            Model model, HttpServletResponse response) {
-        if (result.hasErrors()){
+        if (error.hasErrors()){
             return "ruleName/add";
         }
         service.create(ruleName);
@@ -55,6 +88,14 @@ public class RuleNameController {
         return "ruleName/list";
     }
 
+    /**
+     Show the rule name update form.
+
+     @param id    the id of the rule name to update
+     @param model the model
+
+     @return the update rule name form web page
+     */
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
@@ -66,10 +107,20 @@ public class RuleNameController {
         return "ruleName/update";
     }
 
+    /**
+     Validate the update rule name form.
+
+     @param id       the id
+     @param ruleName the rule name
+     @param error    the error
+     @param model    the model
+
+     @return the rule name homepage if the rule name is updated, or the rule name update form with the error message
+     */
     @PostMapping("/ruleName/update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
-                             BindingResult result, Model model) {
-       if(result.hasErrors()){
+                             BindingResult error, Model model) {
+       if(error.hasErrors()){
             return "ruleName/update";
         }
 
@@ -81,6 +132,14 @@ public class RuleNameController {
         return "ruleName/list";
     }
 
+    /**
+     Delete rule name.
+
+     @param id    the id
+     @param model the model
+
+     @return the rule name homepage when the rule name is deleted
+     */
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
         service.delete(id);

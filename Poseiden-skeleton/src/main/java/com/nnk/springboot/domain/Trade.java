@@ -10,6 +10,9 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
+/**
+ The type Trade.
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -85,8 +88,16 @@ public class Trade {
   @Column(columnDefinition = "VARCHAR(125)")
   private String side;
 
-  public Trade(String account, String type) {
+  /**
+   Instantiates a new Trade.
+
+   @param account     the account
+   @param type        the type
+   @param buyQuantity the buy quantity
+   */
+  public Trade(String account, String type, double buyQuantity) {
     this.account = account;
     this.type = type;
+    this.buyQuantity = buyQuantity;
   }
 }

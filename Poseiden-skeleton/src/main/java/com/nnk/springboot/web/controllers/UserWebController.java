@@ -12,11 +12,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+/**
+ The type User web controller.
+ */
 @Controller
 public class UserWebController {
 
@@ -29,12 +33,24 @@ public class UserWebController {
     private static final Pattern PASSWORD_PATTERN =
         Pattern.compile(PASSWORD_REGEX);
 
-    boolean passwordInvalid= false;
+    private boolean passwordInvalid= false;
 
+    /**
+     Instantiates a new User web controller.
+
+     @param service the service
+     */
     public UserWebController(UserServiceImpl service) {
         this.service = service;
     }
 
+    /**
+     Show user homepage with the list of users.
+
+     @param model the model
+
+     @return the user homepage with the list of users web page
+     */
     @RequestMapping("/user/list")
     public String home(Model model)
     {
@@ -45,6 +61,14 @@ public class UserWebController {
         return "user/list";
     }
 
+    /**
+     Show the add user form.
+
+     @param user  the user
+     @param model the model
+
+     @return the user add form web page
+     */
     @GetMapping("/user/add")
     public String addUser(User user, Model model) {
 
@@ -53,8 +77,19 @@ public class UserWebController {
         return "user/add";
     }
 
+    /**
+     Validate the user creating.
+
+     @param user     the user
+     @param error    the error
+     @param model    the model
+     @param response the response
+
+     @return the user homepage with status 201 if the user is created, or the add form with error message
+     */
     @PostMapping("/user/validate")
-    public String validate(@Valid User user, BindingResult result, Model model) {
+    public String validate(@Valid User user, BindingResult error,
+                           Model model,HttpServletResponse response) {
 
         if (!PASSWORD_PATTERN.matcher(user.getPassword()).matches()) {
             passwordInvalid=true;
@@ -62,11 +97,10 @@ public class UserWebController {
             return "user/add";
         }
 
-        if (!result.hasErrors()) {
+        if (!error.hasErrors()) {
             passwordInvalid=false;
-
             service.create(user);
-
+            response.setStatus(HttpServletResponse.SC_CREATED);
             logger.info("Create - user: full name= "+user.getFullName()+", username= "+ user.getUsername()+
                 ", role= "+user.getRole()+" is saved");
 
@@ -78,6 +112,14 @@ public class UserWebController {
         return "user/add";
     }
 
+    /**
+     Show the user update form.
+
+     @param id    the id of the user
+     @param model the model
+
+     @return the update user form web page
+     */
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         User user = service.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
@@ -88,16 +130,26 @@ public class UserWebController {
         return "user/update";
     }
 
+    /**
+     Update user string.
+
+     @param id     the id of the user
+     @param user   the user
+     @param error  the error
+     @param model  the model
+
+     @return the user homepage if the user is updated, or the user update form with the error message
+     */
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
-                             BindingResult result, Model model) {
+                             BindingResult error, Model model) {
         if (!PASSWORD_PATTERN.matcher(user.getPassword()).matches()) {
             passwordInvalid=true;
             model.addAttribute("passwordInvalid", passwordInvalid);
             return "user/update";
         }
 
-        if (result.hasErrors()) {
+        if (error.hasErrors()) {
             return "user/update";
         }
 
@@ -112,6 +164,14 @@ public class UserWebController {
         return "redirect:/user/list";
     }
 
+    /**
+     Delete user.
+
+     @param id    the id of the user
+     @param model the model
+
+     @return the user homepage when the user is deleted
+     */
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
         Optional<User> user = service.findById(id);

@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ The type User api controller.
+ */
 @RestController
 @RequestMapping("/api")
 public class UserApiController extends HandlerException {
@@ -26,13 +29,22 @@ public class UserApiController extends HandlerException {
   private final ModelMapper mapper= new ModelMapper();
 
 
+  /**
+   Instantiates a new User api controller.
 
+   @param service the service
+   */
   public UserApiController(UserServiceImpl service) {
     this.service = service;
   }
 
+  /**
+   Get all users.
+
+   @return the response entity status 200 with the list of users, or status 204 with an empty list
+   */
   @GetMapping("/users")
-  public ResponseEntity<List<UserDTO>>getAllUser(){
+  public ResponseEntity<List<UserDTO>>getAllUsers(){
     List<User>users= service.getAll();
 
     List<UserDTO>usersDto= users.stream()
@@ -48,6 +60,13 @@ public class UserApiController extends HandlerException {
     return new ResponseEntity<>(usersDto, HttpStatus.OK);
   }
 
+  /**
+   Add user.
+
+   @param user the user
+
+   @return the response entity status 201 with the user object saved
+   */
   @PostMapping("/users")
   public ResponseEntity<User>addUser(@Valid @RequestBody User user){
    User userSave=service.create(user);
@@ -56,6 +75,14 @@ public class UserApiController extends HandlerException {
     return new ResponseEntity<>(userSave,HttpStatus.CREATED);
   }
 
+  /**
+   Update user.
+
+   @param id   the id of user to update
+   @param user the user submitted
+
+   @return the response entity status 201 with the user object updated, or status 404 if the user is not exist
+   */
   @PutMapping("/users/{id}")
   public ResponseEntity<User>updateUser(@PathVariable(value = "id") Integer id,
                                         @Valid @RequestBody User user){
@@ -71,6 +98,13 @@ public class UserApiController extends HandlerException {
     return new ResponseEntity<>(userUpdate,HttpStatus.CREATED);
   }
 
+  /**
+   Delete user.
+
+   @param id the id of the user to deleted
+
+   @return the response entity status 200 when the user is deleted, or status 404 if the user is not exist
+   */
   @DeleteMapping("/users/{id}")
   public ResponseEntity<User>deleteUser(@PathVariable(value = "id") Integer id){
     Optional<User>userIsExist=service.findById(id);

@@ -8,11 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ The type Rating service implementation.
+ */
 @Service
 public class RatingServiceImpl implements RatingService{
 
   private final RatingRepository repository;
 
+  /**
+   Instantiates a new Rating service.
+
+   @param repository the repository
+   */
   public RatingServiceImpl(RatingRepository repository) {
     this.repository = repository;
   }
@@ -36,6 +44,7 @@ public class RatingServiceImpl implements RatingService{
   }
 
   @Override
+  @Transactional
   public Optional<Rating> findById(Integer id) {
     return repository.findById(id);
   }
@@ -48,6 +57,7 @@ public class RatingServiceImpl implements RatingService{
   }
 
   @Override
+  @Transactional
   public void delete(Integer id) {
     repository.deleteById(id);
   }

@@ -8,10 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ The type Rule name service implementation.
+ */
 @Service
 public class RuleNameServiceImpl implements RuleNameService{
   private final RuleNameRepository repository;
 
+  /**
+   Instantiates a new Rule name service.
+
+   @param repository the repository
+   */
   public RuleNameServiceImpl(RuleNameRepository repository) {
     this.repository = repository;
   }
@@ -35,6 +43,7 @@ public class RuleNameServiceImpl implements RuleNameService{
   }
 
   @Override
+  @Transactional
   public Optional<RuleName> findById(Integer id) {
     return repository.findById(id);
   }

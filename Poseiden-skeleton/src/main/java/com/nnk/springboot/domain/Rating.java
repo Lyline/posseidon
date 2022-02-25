@@ -8,6 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ The type Rating.
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -35,6 +38,14 @@ public class Rating {
   @NotNull(message = "Order number must not be null")
   private Integer orderNumber;
 
+  /**
+   Instantiates a new Rating.
+
+   @param moodysRating the moodys rating
+   @param sandPRating  the sand p rating
+   @param fitchRating  the fitch rating
+   @param orderNumber  the order number
+   */
   public Rating(String moodysRating, String sandPRating, String fitchRating, Integer orderNumber) {
     this.moodysRating = moodysRating;
     this.sandPRating = sandPRating;

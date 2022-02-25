@@ -11,6 +11,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+/**
+ The type Curve point.
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -43,6 +46,13 @@ public class CurvePoint {
   @Column(columnDefinition = "TIMESTAMP")
   private LocalDateTime creationDate;
 
+  /**
+   Instantiates a new Curve point with the mandatory fields.
+
+   @param curveId the curve id
+   @param term    the term
+   @param value   the value
+   */
   public CurvePoint(Integer curveId, double term, double value) {
     this.curveId = curveId;
     this.term = term;

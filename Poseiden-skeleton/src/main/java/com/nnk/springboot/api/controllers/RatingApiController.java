@@ -13,6 +13,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ The type Rating api controller.
+ */
 @RestController
 @RequestMapping("/api")
 public class RatingApiController extends HandlerException {
@@ -20,10 +23,20 @@ public class RatingApiController extends HandlerException {
   private final RatingServiceImpl service;
   private final Logger logger= LoggerFactory.getLogger(RatingApiController.class);
 
+  /**
+   Instantiates a new Rating api controller.
+
+   @param service the service
+   */
   public RatingApiController(RatingServiceImpl service) {
     this.service = service;
   }
 
+  /**
+   Get all ratings.
+
+   @return the response entity status 200 with a list of ratings, or status 204 with an empty list
+   */
   @GetMapping("/ratings")
   public ResponseEntity<List<Rating>> getAllRatings(){
     List<Rating>ratings=service.getAll();
@@ -36,6 +49,13 @@ public class RatingApiController extends HandlerException {
     }
   }
 
+  /**
+   Add rating.
+
+   @param rating the rating
+
+   @return the response entity status 201 with the rating object saved
+   */
   @PostMapping("/ratings")
   public ResponseEntity<Rating>addRating(@Valid @RequestBody Rating rating){
     Rating ratingSave=service.create(rating);
@@ -45,6 +65,14 @@ public class RatingApiController extends HandlerException {
     return new ResponseEntity<>(ratingSave,HttpStatus.CREATED);
   }
 
+  /**
+   Update rating.
+
+   @param id     the id of rating to update
+   @param rating the rating submitted
+
+   @return the response entity status 201 with the rating object updated, or status 404 if the rating is not exist
+   */
   @PutMapping("/ratings/{id}")
   public ResponseEntity<Rating>updateRating(@PathVariable(value = "id") Integer id,
                                             @Valid @RequestBody Rating rating){
@@ -61,8 +89,15 @@ public class RatingApiController extends HandlerException {
     return new ResponseEntity<>(curveUpdate,HttpStatus.CREATED);
   }
 
+  /**
+   Delete rating.
+
+   @param id the id of rating to delete
+
+   @return the response entity status 200 when the rating is deleted, or status 404 if the rating is not exist
+   */
   @DeleteMapping("/ratings/{id}")
-  public ResponseEntity<Rating>deleteBidList(@PathVariable(value = "id") Integer id){
+  public ResponseEntity<Rating> deleteRating(@PathVariable(value = "id") Integer id){
     Optional<Rating>ratingIsExist=service.findById(id);
     if (ratingIsExist.isEmpty()){
       logger.info("Read - rating with id "+id+" is not exist");

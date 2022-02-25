@@ -8,11 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ The type Trade service implementation.
+ */
 @Service
 public class TradeServiceImpl implements TradeService{
 
   private final TradeRepository repository;
 
+  /**
+   Instantiates a new Trade service.
+
+   @param repository the repository
+   */
   public TradeServiceImpl(TradeRepository repository) {
     this.repository = repository;
   }

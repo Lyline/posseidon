@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/**
+ The type Curve point DTO use in the web application.
+ */
 @Getter
 @Setter
 @RequiredArgsConstructor

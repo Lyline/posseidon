@@ -13,12 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+/**
+ The type User service implementation.
+ */
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
   private final UserRepository repository;
 
   private BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder();
 
+  /**
+   Instantiates a new User service.
+
+   @param repository the repository
+   */
   public UserServiceImpl(UserRepository repository) {
     this.repository = repository;
   }
