@@ -1,9 +1,10 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.service.UserServiceImpl;
+import com.nnk.springboot.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +25,9 @@ import java.util.regex.Pattern;
 @Controller
 public class UserWebController {
 
-    private final UserServiceImpl service;
+    @Autowired
+    private UserService service;
+
     private final Logger logger= LoggerFactory.getLogger(UserWebController.class);
 
     private static final String PASSWORD_REGEX =
@@ -40,7 +43,7 @@ public class UserWebController {
 
      @param service the service
      */
-    public UserWebController(UserServiceImpl service) {
+    public UserWebController(UserService service) {
         this.service = service;
     }
 

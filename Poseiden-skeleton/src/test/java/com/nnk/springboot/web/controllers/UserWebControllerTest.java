@@ -1,7 +1,7 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.service.UserServiceImpl;
+import com.nnk.springboot.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ class UserWebControllerTest {
   private MockMvc mockMvc;
 
   @MockBean
-  private UserServiceImpl service;
+  private UserService service;
 
   User user= new User();
   User user1= new User();

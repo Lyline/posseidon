@@ -1,6 +1,6 @@
 package com.nnk.springboot.config;
 
-import com.nnk.springboot.service.UserServiceImpl;
+import com.nnk.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
-  private UserServiceImpl userService;
+  private UserService userService;
 
   @Profile("prod")
   @Override

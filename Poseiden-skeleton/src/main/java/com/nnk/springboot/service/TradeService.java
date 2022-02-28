@@ -1,64 +1,58 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.repositories.TradeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- The interface Trade service.
+ The type Trade service implementation.
  */
 @Service
-public interface TradeService {
-  /**
-   Get all trades.
+public class TradeService {
 
-   @return the list of the trades
-   */
-  List<Trade>getAll();
+  private final TradeRepository repository;
 
   /**
-   Create trade.
+   Instantiates a new Trade service.
 
-   @param trade the trade
-
-   @return the trade object created
+   @param repository the repository
    */
-  Trade create(Trade trade);
+  public TradeService(TradeRepository repository) {
+    this.repository = repository;
+  }
 
-  /**
-   Gets trade by id.
+  @Transactional
+  public List<Trade> getAll() {
+    return repository.findAll();
+  }
 
-   @param id the id of the trade
+  @Transactional
+  public Trade create(Trade trade) {
+    return repository.save(trade);
+  }
 
-   @return the trade object if it exists or null
-   */
-  Trade getById(Integer id);
+  @Transactional
+  public Trade getById(Integer id) {
+    return repository.getById(id);
+  }
 
-  /**
-   Find trade by id.
+  @Transactional
+  public Optional<Trade> findById(Integer id) {
+    return repository.findById(id);
+  }
 
-   @param id the id of the trade
+  @Transactional
+  public Trade update(Integer id, Trade tradeToSave) {
+    tradeToSave.setTradeId(id);
+    return repository.save(tradeToSave);
+  }
 
-   @return the optional, return trade object if it exists or optional empty
-   */
-  Optional<Trade> findById(Integer id);
-
-  /**
-   Update trade by id.
-
-   @param id          the id of the trade
-   @param tradeToSave the trade to save
-
-   @return the trade object updated
-   */
-  Trade update(Integer id, Trade tradeToSave);
-
-  /**
-   Delete trade by id.
-
-   @param id the id of the trade
-   */
-  void delete(Integer id);
+  @Transactional
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }

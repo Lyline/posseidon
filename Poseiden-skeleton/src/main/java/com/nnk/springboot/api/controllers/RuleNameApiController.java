@@ -2,9 +2,10 @@ package com.nnk.springboot.api.controllers;
 
 import com.nnk.springboot.api.controllers.exception.HandlerException;
 import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.service.RuleNameServiceImpl;
+import com.nnk.springboot.service.RuleNameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,9 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class RuleNameApiController extends HandlerException {
 
-  private final RuleNameServiceImpl service;
+  @Autowired
+  private RuleNameService service;
+
   private final Logger logger= LoggerFactory.getLogger(RuleNameApiController.class);
 
   /**
@@ -28,7 +31,7 @@ public class RuleNameApiController extends HandlerException {
 
    @param service the service
    */
-  public RuleNameApiController(RuleNameServiceImpl service) {
+  public RuleNameApiController(RuleNameService service) {
     this.service = service;
   }
 

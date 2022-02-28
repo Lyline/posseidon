@@ -1,7 +1,7 @@
 package com.nnk.springboot.api.controllers;
 
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.service.UserServiceImpl;
+import com.nnk.springboot.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ class UserApiControllerTest {
   private MockMvc mockMvc;
 
   @MockBean
-  private UserServiceImpl service;
+  private UserService service;
 
   private final User user= new User();
   private final User user1= new User();

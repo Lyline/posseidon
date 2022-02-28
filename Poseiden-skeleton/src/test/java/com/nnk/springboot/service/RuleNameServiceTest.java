@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 class RuleNameServiceTest {
   private final RuleNameRepository repository= mock(RuleNameRepository.class);
-  private final RuleNameServiceImpl classUnderTest= new RuleNameServiceImpl(repository);
+  private final RuleNameService classUnderTest= new RuleNameService(repository);
 
   private final RuleName ruleName= new RuleName();
   private final RuleName ruleName1= new RuleName();

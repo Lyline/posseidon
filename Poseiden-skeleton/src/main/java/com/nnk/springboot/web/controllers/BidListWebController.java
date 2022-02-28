@@ -1,11 +1,12 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.service.BidListServiceImpl;
+import com.nnk.springboot.service.BidListService;
 import com.nnk.springboot.web.controllers.dto.BidListDTO;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,17 +25,19 @@ import java.util.stream.Collectors;
  */
 @Controller
 public class BidListWebController {
-   private final BidListServiceImpl service;
 
-    private final ModelMapper mapper=new ModelMapper();
-    private final Logger logger= LoggerFactory.getLogger(BidListWebController.class);
+  @Autowired
+  private BidListService service;
+
+  private final ModelMapper mapper=new ModelMapper();
+  private final Logger logger= LoggerFactory.getLogger(BidListWebController.class);
 
   /**
    Instantiates a new Bid web controller.
 
    @param service the service
    */
-  public BidListWebController(BidListServiceImpl service) {
+  public BidListWebController(BidListService service) {
         this.service = service;
     }
 

@@ -1,7 +1,7 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.service.BidListServiceImpl;
+import com.nnk.springboot.service.BidListService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class BidListWebControllerTest {
   private MockMvc mockMvc;
 
   @MockBean
-  private BidListServiceImpl service;
+  private BidListService service;
 
   private final BidList bid= new BidList();
   private final BidList bid1= new BidList();

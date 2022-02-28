@@ -1,9 +1,10 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.service.RatingServiceImpl;
+import com.nnk.springboot.service.RatingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,7 +23,9 @@ import java.util.List;
 @Controller
 public class RatingWebController {
 
-    private final RatingServiceImpl service;
+    @Autowired
+    private RatingService service;
+
     private final Logger logger= LoggerFactory.getLogger(RatingWebController.class);
 
     /**
@@ -30,7 +33,7 @@ public class RatingWebController {
 
      @param service the service
      */
-    public RatingWebController(RatingServiceImpl service) {
+    public RatingWebController(RatingService service) {
         this.service = service;
     }
 

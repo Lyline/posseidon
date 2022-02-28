@@ -1,55 +1,90 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.repositories.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
- The interface User service.
+ The type User service implementation.
  */
 @Service
-public interface UserService {
-  /**
-   Gets all users.
+public class UserService implements UserDetailsService {
+  private final UserRepository repository;
 
-   @return the list of users
-   */
-  List<User> getAll();
+  private BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder();
 
   /**
-   Create user.
+   Instantiates a new User service.
 
-   @param user the user
-
-   @return the user object created
+   @param repository the repository
    */
-  User create(User user);
+  public UserService(UserRepository repository) {
+    this.repository = repository;
+  }
 
-  /**
-   Find user by id.
+  @Transactional
+  public List<User> getAll() {
+    return repository.findAll();
+  }
 
-   @param id the id of the user
+  @Transactional
+  public User create(User user) {
+    String password= user.getPassword();
+    String encodePassword= passwordEncoder.encode(password);
+    user.setPassword(encodePassword);
+    return repository.save(user);
+  }
 
-   @return the optional, return user object if it exists or optional empty
-   */
-  Optional<User> findById(Integer id);
+  @Transactional
+  public Optional<User> findById(Integer id) {
+    return repository.findById(id);
+  }
 
-  /**
-   Update user by id.
+  @Transactional
+  public User update(Integer id, User user) {
+    user.setId(id);
+    String password= user.getPassword();
+    String encodePassword= passwordEncoder.encode(password);
+    user.setPassword(encodePassword);
+    return repository.save(user);
+  }
 
-   @param id   the id of the user
-   @param user the user
+  @Transactional
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 
-   @return the user object updated
-   */
-  User update(Integer id, User user);
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    Optional<User> userOptional= repository.findByUsername(username);
 
-  /**
-   Delete user by id.
+    org.springframework.security.core.userdetails.User springUser=null;
 
-   @param id the id of the user
-   */
-  void delete(Integer id);
+    if (userOptional.isEmpty()){
+      throw new UsernameNotFoundException(username+" not found");
+    }else{
+      User user= userOptional.get();
+
+      List<String> roles= Collections.singletonList(user.getRole());
+      Set<GrantedAuthority> grantedAuthorities= new HashSet<>();
+      for (String role:roles){
+        grantedAuthorities.add(new SimpleGrantedAuthority(role));
+      }
+
+      springUser= new org.springframework.security.core.userdetails.User(
+          username,user.getPassword(), grantedAuthorities);
+
+    }
+
+    return springUser;
+  }
 }

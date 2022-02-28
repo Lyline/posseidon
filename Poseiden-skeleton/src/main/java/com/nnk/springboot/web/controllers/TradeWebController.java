@@ -1,11 +1,12 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.service.TradeServiceImpl;
+import com.nnk.springboot.service.TradeService;
 import com.nnk.springboot.web.controllers.dto.TradeDTO;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +25,9 @@ import java.util.stream.Collectors;
  */
 @Controller
 public class TradeWebController {
-    private final TradeServiceImpl service;
+
+    @Autowired
+    private TradeService service;
 
     private final ModelMapper mapper= new ModelMapper();
     private final Logger logger= LoggerFactory.getLogger(TradeWebController.class);
@@ -34,7 +37,7 @@ public class TradeWebController {
 
      @param service the service
      */
-    public TradeWebController(TradeServiceImpl service) {
+    public TradeWebController(TradeService service) {
         this.service = service;
     }
 

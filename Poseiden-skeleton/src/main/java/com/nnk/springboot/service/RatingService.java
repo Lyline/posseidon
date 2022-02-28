@@ -1,64 +1,58 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.repositories.RatingRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- The interface Rating service.
+ The type Rating service implementation.
  */
 @Service
-public interface RatingService {
-  /**
-   Gets all ratings.
+public class RatingService {
 
-   @return the list of the ratings
-   */
-  List<Rating> getAll();
+  private final RatingRepository repository;
 
   /**
-   Create rating.
+   Instantiates a new Rating service.
 
-   @param ratingToSave the rating to save
-
-   @return the rating object created
+   @param repository the repository
    */
-  Rating create(Rating ratingToSave);
+  public RatingService(RatingRepository repository) {
+    this.repository = repository;
+  }
 
-  /**
-   Gets rating by id.
+  @Transactional
+  public List<Rating> getAll() {
+    return repository.findAll();
+  }
 
-   @param id the id of the rating
+  @Transactional
+  public Rating create(Rating ratingToSave) {
+    return repository.save(ratingToSave);
+  }
 
-   @return the rating object if it exists or null
-   */
-  Rating getById(Integer id);
+  @Transactional
+  public Rating getById(Integer id) {
+    return repository.getById(id);
+  }
 
-  /**
-   Find rating by id.
+  @Transactional
+  public Optional<Rating> findById(Integer id) {
+    return repository.findById(id);
+  }
 
-   @param id the id of the rating
+  @Transactional
+  public Rating update(Integer id, Rating ratingToUpdate) {
+    ratingToUpdate.setId(id);
+    return repository.save(ratingToUpdate);
+  }
 
-   @return the optional, return rating if it exists or optional is empty
-   */
-  Optional<Rating> findById(Integer id);
-
-  /**
-   Update rating by id.
-
-   @param id             the id of the rating
-   @param ratingToUpdate the rating to update
-
-   @return the rating object updated
-   */
-  Rating update(Integer id, Rating ratingToUpdate);
-
-  /**
-   Delete rating by id.
-
-   @param id the id of the rating
-   */
-  void delete(Integer id);
+  @Transactional
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }

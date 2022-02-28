@@ -1,7 +1,7 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.service.TradeServiceImpl;
+import com.nnk.springboot.service.TradeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class TradeWebControllerTest {
   private MockMvc mockMvc;
 
   @MockBean
-  private TradeServiceImpl service;
+  private TradeService service;
 
   private final Trade trade= new Trade();
   private final Trade trade1= new Trade();

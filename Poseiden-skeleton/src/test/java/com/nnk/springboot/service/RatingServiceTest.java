@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 class RatingServiceTest {
   private final RatingRepository repository= mock(RatingRepository.class);
-  private final RatingService classUnderTest= new RatingServiceImpl(repository);
+  private final RatingService classUnderTest= new RatingService(repository);
 
   private final Rating rating= new Rating();
   private final Rating rating1= new Rating();

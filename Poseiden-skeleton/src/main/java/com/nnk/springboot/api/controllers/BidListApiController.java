@@ -2,9 +2,10 @@ package com.nnk.springboot.api.controllers;
 
 import com.nnk.springboot.api.controllers.exception.HandlerException;
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.service.BidListServiceImpl;
+import com.nnk.springboot.service.BidListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,9 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class BidListApiController extends HandlerException{
 
-  private final BidListServiceImpl service;
+  @Autowired
+  private BidListService service;
+
   private final Logger logger= LoggerFactory.getLogger(BidListApiController.class);
 
   /**
@@ -28,7 +31,7 @@ public class BidListApiController extends HandlerException{
 
    @param service the service
    */
-  public BidListApiController(BidListServiceImpl service) {
+  public BidListApiController(BidListService service) {
     this.service = service;
   }
 

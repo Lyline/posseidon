@@ -1,7 +1,7 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.service.RuleNameServiceImpl;
+import com.nnk.springboot.service.RuleNameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ class RuleNameWebControllerTest {
   private MockMvc mockMvc;
 
   @MockBean
-  private RuleNameServiceImpl service;
+  private RuleNameService service;
 
   private final RuleName ruleName= new RuleName();
   private final RuleName ruleName1= new RuleName();

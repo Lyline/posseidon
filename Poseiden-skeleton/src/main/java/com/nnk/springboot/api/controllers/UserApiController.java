@@ -3,10 +3,11 @@ package com.nnk.springboot.api.controllers;
 import com.nnk.springboot.api.controllers.dto.UserDTO;
 import com.nnk.springboot.api.controllers.exception.HandlerException;
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.service.UserServiceImpl;
+import com.nnk.springboot.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +24,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class UserApiController extends HandlerException {
 
-  private final UserServiceImpl service;
+  @Autowired
+  private UserService service;
 
-  private final Logger logger= LoggerFactory.getLogger(UserServiceImpl.class);
+  private final Logger logger= LoggerFactory.getLogger(UserService.class);
   private final ModelMapper mapper= new ModelMapper();
 
 
@@ -34,7 +36,7 @@ public class UserApiController extends HandlerException {
 
    @param service the service
    */
-  public UserApiController(UserServiceImpl service) {
+  public UserApiController(UserService service) {
     this.service = service;
   }
 

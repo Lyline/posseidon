@@ -3,9 +3,10 @@ package com.nnk.springboot.api.controllers;
 import com.nnk.springboot.api.controllers.exception.HandlerException;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.service.CurvePointServiceImpl;
+import com.nnk.springboot.service.CurvePointService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,9 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class CurvePointApiController extends HandlerException {
 
-  private final CurvePointServiceImpl service;
+  @Autowired
+  private CurvePointService service;
+
   private final Logger logger= LoggerFactory.getLogger(CurvePointApiController.class);
 
   /**
@@ -29,7 +32,7 @@ public class CurvePointApiController extends HandlerException {
 
    @param service the service
    */
-  public CurvePointApiController(CurvePointServiceImpl service) {
+  public CurvePointApiController(CurvePointService service) {
     this.service = service;
   }
 

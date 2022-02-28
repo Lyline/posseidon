@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 public class BidListServiceTest {
   private BidListRepository repository=mock(BidListRepository.class);
 
-  private BidListService classUnderTest= new BidListServiceImpl(repository);
+  private BidListService classUnderTest= new BidListService(repository);
 
   private final BidList bid= new BidList();
   private final BidList bid1= new BidList();

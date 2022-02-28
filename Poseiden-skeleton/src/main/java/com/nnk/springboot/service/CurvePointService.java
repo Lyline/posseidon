@@ -1,64 +1,57 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.repositories.CurvePointRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- The interface Curve point service.
+ The type Curve point service implementation.
  */
 @Service
-public interface CurvePointService {
-  /**
-   Get all curve point.
-
-   @return the list of curve points
-   */
-  List<CurvePoint>getAll();
+public class CurvePointService {
+  private final CurvePointRepository repository;
 
   /**
-   Create curve point.
+   Instantiates a new Curve point service.
 
-   @param curvePoint the curve point
-
-   @return the curve point object created
+   @param repository the repository
    */
-  CurvePoint create(CurvePoint curvePoint);
+  public CurvePointService(CurvePointRepository repository) {
+    this.repository = repository;
+  }
 
-  /**
-   Gets curve point by id.
+  @Transactional
+  public List<CurvePoint> getAll() {
+    return repository.findAll();
+  }
 
-   @param id the id of the curve point
+  @Transactional
+  public CurvePoint create(CurvePoint curvePoint) {
+    return repository.save(curvePoint);
+  }
 
-   @return the curve point if it exists or null
-   */
-  CurvePoint getById(Integer id);
+  @Transactional
+  public CurvePoint getById(Integer id) {
+    return repository.getById(id);
+  }
 
-  /**
-   Find curve point by id.
+  @Transactional
+  public Optional<CurvePoint> findById(Integer id) {
+    return repository.findById(id);
+  }
 
-   @param id the id
+  @Transactional
+  public CurvePoint update(Integer id, CurvePoint curveToUpdate) {
+    curveToUpdate.setId(id);
+    return repository.save(curveToUpdate);
+  }
 
-   @return the optional, return curve point objet if it exists or optional is empty
-   */
-  Optional<CurvePoint> findById(Integer id);
-
-  /**
-   Update curve point by id.
-
-   @param id            the id of the curve point
-   @param curveToUpdate the curve to update
-
-   @return the curve point updated
-   */
-  CurvePoint update(Integer id, CurvePoint curveToUpdate);
-
-  /**
-   Delete curve point by id.
-
-   @param id the id of the curve point
-   */
-  void delete(Integer id);
+  @Transactional
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }

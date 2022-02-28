@@ -2,9 +2,10 @@ package com.nnk.springboot.api.controllers;
 
 import com.nnk.springboot.api.controllers.exception.HandlerException;
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.service.RatingServiceImpl;
+import com.nnk.springboot.service.RatingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,9 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class RatingApiController extends HandlerException {
 
-  private final RatingServiceImpl service;
+  @Autowired
+  private RatingService service;
+
   private final Logger logger= LoggerFactory.getLogger(RatingApiController.class);
 
   /**
@@ -28,7 +31,7 @@ public class RatingApiController extends HandlerException {
 
    @param service the service
    */
-  public RatingApiController(RatingServiceImpl service) {
+  public RatingApiController(RatingService service) {
     this.service = service;
   }
 

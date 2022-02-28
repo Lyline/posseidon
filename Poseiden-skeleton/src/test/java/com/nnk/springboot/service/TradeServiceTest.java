@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 class TradeServiceTest {
   private final TradeRepository repository= mock(TradeRepository.class);
-  private final TradeService classUnderTest= new TradeServiceImpl(repository);
+  private final TradeService classUnderTest= new TradeService(repository);
 
   private final Trade trade= new Trade();
   private final Trade trade1= new Trade();

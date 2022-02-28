@@ -1,11 +1,12 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.service.CurvePointServiceImpl;
+import com.nnk.springboot.service.CurvePointService;
 import com.nnk.springboot.web.controllers.dto.CurvePointDTO;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,7 +26,8 @@ import java.util.stream.Collectors;
 @Controller
 public class CurvePointWebController {
 
-    private final CurvePointServiceImpl service;
+    @Autowired
+    private CurvePointService service;
 
     private final ModelMapper mapper=new ModelMapper();
     private final Logger logger= LoggerFactory.getLogger(CurvePointWebController.class);
@@ -35,7 +37,7 @@ public class CurvePointWebController {
 
      @param service the service
      */
-    public CurvePointWebController(CurvePointServiceImpl service) {
+    public CurvePointWebController(CurvePointService service) {
         this.service = service;
     }
 

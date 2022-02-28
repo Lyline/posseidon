@@ -2,9 +2,10 @@ package com.nnk.springboot.api.controllers;
 
 import com.nnk.springboot.api.controllers.exception.HandlerException;
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.service.TradeServiceImpl;
+import com.nnk.springboot.service.TradeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,8 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class TradeApiController extends HandlerException {
 
-  private final TradeServiceImpl service;
+  @Autowired
+  private TradeService service;
   private final Logger logger= LoggerFactory.getLogger(TradeApiController.class);
 
   /**
@@ -28,7 +30,7 @@ public class TradeApiController extends HandlerException {
 
    @param service the service
    */
-  public TradeApiController(TradeServiceImpl service) {
+  public TradeApiController(TradeService service) {
     this.service = service;
   }
 

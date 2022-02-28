@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
 
   private final UserRepository repository= mock(UserRepository.class);
-  private final UserService classUnderTest= new UserServiceImpl(repository);
+  private final UserService classUnderTest= new UserService(repository);
 
   private final User user= new User();
   private final User user1= new User();

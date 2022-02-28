@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 class CurvePointServiceTest {
   private final CurvePointRepository repository= mock(CurvePointRepository.class);
-  private final CurvePointService classUnderTest= new CurvePointServiceImpl(repository);
+  private final CurvePointService classUnderTest= new CurvePointService(repository);
 
   private final CurvePoint curve= new CurvePoint();
   private final CurvePoint curve1= new CurvePoint();

@@ -1,65 +1,57 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.repositories.BidListRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- The interface bid service.
+ The type bid service implementation.
  */
 @Service
-public interface BidListService {
+public class BidListService {
+  private final BidListRepository repository;
 
   /**
-   Gets all bids.
+   Instantiates a new Bid list service.
 
-   @return the list of bids
+   @param repository the repository
    */
-  List<BidList> getAll();
+  public BidListService(BidListRepository repository) {
+    this.repository = repository;
+  }
 
-  /**
-   Create bid.
+  @Transactional
+  public List<BidList> getAll() {
+    return repository.findAll();
+  }
 
-   @param bidToSave the bid to save
+  @Transactional
+  public BidList create(BidList bidToSave) {
+    return repository.save(bidToSave);
+  }
 
-   @return the bid object created
-   */
-  BidList create(BidList bidToSave);
+  @Transactional
+  public BidList getById(Integer id) {
+    return repository.getById(id);
+  }
 
-  /**
-   Gets bid by id.
+  @Transactional
+  public Optional<BidList> findById(Integer id){
+    return repository.findById(id);
+  }
 
-   @param id the id of the bid
+  @Transactional
+  public BidList update(Integer id, BidList bidToUpdate) {
+    bidToUpdate.setId(id);
+    return repository.save(bidToUpdate);
+  }
 
-   @return the bid object if it exists or null
-   */
-  BidList getById(Integer id);
-
-  /**
-   Find bid by id.
-
-   @param id the id of the bid
-
-   @return the optional, return bid object if it exists or optional is empty
-   */
-  Optional<BidList> findById(Integer id);
-
-  /**
-   Update bid by id.
-
-   @param id          the id of the bid
-   @param bidToUpdate the bid to update
-
-   @return the bid updated
-   */
-  BidList update(Integer id, BidList bidToUpdate);
-
-  /**
-   Delete bid by id.
-
-   @param id the id of the bid
-   */
-  void delete(Integer id);
+  @Transactional
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }

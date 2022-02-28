@@ -1,64 +1,57 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.repositories.RuleNameRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- The interface Rule name service.
+ The type Rule name service implementation.
  */
 @Service
-public interface RuleNameService {
-  /**
-   Gets all rule names.
-
-   @return the list of rule names
-   */
-  List<RuleName> getAll();
+public class RuleNameService {
+  private final RuleNameRepository repository;
 
   /**
-   Create rule name.
+   Instantiates a new Rule name service.
 
-   @param ruleName the rule name
-
-   @return the rule name object created
+   @param repository the repository
    */
-  RuleName create(RuleName ruleName);
+  public RuleNameService(RuleNameRepository repository) {
+    this.repository = repository;
+  }
 
-  /**
-   Gets rule name by id.
+  @Transactional
+  public List<RuleName> getAll() {
+    return repository.findAll();
+  }
 
-   @param id the id of the rule name
+  @Transactional
+  public RuleName create(RuleName ruleName) {
+    return repository.save(ruleName);
+  }
 
-   @return the rule name if it exists or null
-   */
-  RuleName getById(Integer id);
+  @Transactional
+  public RuleName getById(Integer id) {
+    return repository.getById(id);
+  }
 
-  /**
-   Find rule name by id.
+  @Transactional
+  public Optional<RuleName> findById(Integer id) {
+    return repository.findById(id);
+  }
 
-   @param id the id of the rule name
+  @Transactional
+  public RuleName update(Integer id, RuleName ruleNameToUpdate) {
+    ruleNameToUpdate.setId(id);
+    return repository.save(ruleNameToUpdate);
+  }
 
-   @return the optional, return the rule name object if it exists or optional empty
-   */
-  Optional<RuleName> findById(Integer id);
-
-  /**
-   Update rule name by id.
-
-   @param id               the id of the rule name
-   @param ruleNameToUpdate the rule name to update
-
-   @return the rule name object updated
-   */
-  RuleName update(Integer id, RuleName ruleNameToUpdate);
-
-  /**
-   Delete rule name by id.
-
-   @param id the id of the rule name
-   */
-  void delete(Integer id);
+  @Transactional
+  public void delete(Integer id) {
+    repository.deleteById(id);
+  }
 }

@@ -1,7 +1,7 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.service.CurvePointServiceImpl;
+import com.nnk.springboot.service.CurvePointService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ class CurvePointWebControllerTest {
   private MockMvc mockMvc;
 
   @MockBean
-  private CurvePointServiceImpl service;
+  private CurvePointService service;
 
   private final CurvePoint curve= new CurvePoint();
   private final CurvePoint curve1= new CurvePoint();

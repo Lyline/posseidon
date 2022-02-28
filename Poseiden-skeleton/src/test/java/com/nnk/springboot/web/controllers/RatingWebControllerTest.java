@@ -1,7 +1,7 @@
 package com.nnk.springboot.web.controllers;
 
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.service.RatingServiceImpl;
+import com.nnk.springboot.service.RatingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class RatingWebControllerTest {
   private MockMvc mockMvc;
 
   @MockBean
-  private RatingServiceImpl service;
+  private RatingService service;
 
   private final Rating rating= new Rating();
   private final Rating rating1= new Rating();
